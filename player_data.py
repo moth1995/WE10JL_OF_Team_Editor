@@ -1,60 +1,53 @@
-from COFPES_OF_Editor_7.editor.utils.common_functions import zero_fill_right_shift
+from editor.utils.common_functions import zero_fill_right_shift
 
 # Thanks to evo-web's user mattmid for helping me with various player attributes!
 
 # This function is use to get option file data into integer and assign it to a variable
-from teams import get_players_nations, get_players_clubs, get_players_ml, last_nat_team_id
+from teams import get_players_clubs, get_players_ml,get_shop_players
 
 def get_value(of, player_id, offset, shift, mask, stat_name):
     i = start_address + 48 + player_id * 124 + offset
-    if player_id > last_player_id:
-        #print((player_id - first_edited_id))
+    if player_id > total_players:
         i = start_address_edited + 48 + (player_id - first_edited_id) * 124 + offset
-    #print(i)
-    #print("{0:x}".player_hair_shapet(of.data[i]))
-    #print(of.data[i])
-    #print("left shift previous value by 8 bytes")
-    #print("{0:b}".player_hair_shapet((to_int(of.data[i]) << 8)))
-    #print("previous offset value in binary")
-    #print("{0:b}".player_hair_shapet(to_int(of.data[(i-1)])))
-    #j = to_int(of.data[i]) << 8 | to_int(of.data[(i - 1)])
     j = (of.data[i]) << 8 | (of.data[(i - 1)])
-    #print("result of OR operation between two previous values")
-    #print("{0:b}".player_hair_shapet(j))
     j = zero_fill_right_shift(j,shift)
-    #print("previous value after apply zero fill right shift by " + str(shift))
-    #print("{0:b}".player_hair_shapet(j))
     j &= mask
-    #print(stat_name)
-    #print("previous value after AND operation with " + str(mask))
-    #print("{0:b}".player_hair_shapet(j))
-    #print(j)
     return j
 
 
 #Most of the code for the function below was taken from peterc10 file player.py thanks a lot pete!
 
 def get_names(player_id, of):
+    print(player_id)
     name = "???"
     name_bytes_length = 32
     player_offset = start_address + player_id * 124
-    if player_id>last_player_id:
+    if player_id>total_players:
         player_offset = start_address_edited + ((player_id - first_edited_id) * 124)
     if (
         player_id > 0
-        and (player_id <= last_player_id or player_id >= first_edited_id)
+        and (player_id <= total_players or player_id >= first_edited_id)
         and player_id < first_edited_id + total_edit
     ):
         all_name_bytes = of.data[
              player_offset : player_offset + name_bytes_length
         ]
+        """
         name_only_bytes = bytearray(name_bytes_length // 2)
 
         for i in range(0,name_bytes_length, 2):
             name_only_bytes[i // 2] = all_name_bytes[i]
-
+        
+        
         name = name_only_bytes.partition(b"\0")[0]
         name = "".join(map(chr, name))
+        """
+        try:
+            name = all_name_bytes.decode('utf-16-le').encode('utf-8').partition(b"\0")[0].decode('utf-8')
+            #name = "".join(map(chr, name))
+        except:
+            name = f"<Error {player_id}>"
+        
 
         if not name:
             no_name_prefixes = {
@@ -75,8 +68,9 @@ def get_names(player_id, of):
             shirt_name_address : shirt_name_address
             + name_bytes_length // 2
         ]
+        print(name_byte_array)
         #print(player_id)
-        shirt_name = name_byte_array.partition(b"\0")[0].decode()
+        shirt_name = name_byte_array.partition(b"\0")[0].decode('utf-8')
 
     #print (name)
     #print (shirt_name)
@@ -86,22 +80,16 @@ def get_names(player_id, of):
 # This function is use to set/modify a value from any source to the option file into byte
 
 def set_value(of, player_id, offset, shift, mask, new_value):
-    #print (start_address, player_id * 124, offset)
     i = start_address + 48 + (player_id * 124) + offset
-    if (player_id > last_player_id):
+    if (player_id > total_players):
         i = start_address_edited + 48 + ((player_id - first_edited_id) * 124) + offset
-    #j = to_int(of.data[i]) << 8 | to_int(of.data[(i - 1)])
-    #print(i)
     j = (of.data[i]) << 8 | (of.data[(i - 1)])
     k = 0xFFFF & (mask << shift ^ 0xFFFFFFFF)
     j &= k
     new_value &= mask
     new_value <<= shift
     new_value = j | new_value
-    #print(type(of.data[(i - 1)]))
-    #of.data[(i - 1)] = to_byte(new_value & 0xFF)
     of.data[(i - 1)] = (new_value & 0xFF)
-    #of.data[i] = to_byte(zero_fill_right_shift(new_value,8))
     of.data[i] = (zero_fill_right_shift(new_value,8))
 
 
@@ -114,14 +102,14 @@ def set_name(of, player_id, new_name):
         player_name_bytes=[0] * name_bytes_length
     else:
         player_name_bytes = [0] * name_bytes_length
-        new_name_bytes = str.encode(new_name, "utf-16-le")
+        new_name_bytes = str.encode(new_name, "utf-16-le","ignore")
         player_name_bytes[: len(new_name_bytes)] = new_name_bytes
     player_offset = start_address + player_id * 124
-    if player_id>last_player_id:
+    if player_id>total_players:
         player_offset = start_address_edited + ((player_id - first_edited_id) * 124)
     if (
         player_id > 0
-        and (player_id <= last_player_id or player_id >= first_edited_id)
+        and (player_id <= total_players or player_id >= first_edited_id)
         and player_id < first_edited_id + total_edit
     ):
         for i, byte in enumerate(player_name_bytes):
@@ -131,11 +119,11 @@ def set_shirt_name(of, player_id, new_shirt_name):
     max_name_size = 15
     shirt_name_bytes_length = 16
     player_offset = start_address + player_id * 124
-    if player_id>last_player_id:
+    if player_id>total_players:
         player_offset = start_address_edited + ((player_id - first_edited_id) * 124)
     if (
         player_id > 0
-        and (player_id <= last_player_id or player_id >= first_edited_id)
+        and (player_id <= total_players or player_id >= first_edited_id)
         and player_id < first_edited_id + total_edit
     ):
 
@@ -143,7 +131,7 @@ def set_shirt_name(of, player_id, new_shirt_name):
         new_name = new_shirt_name[: max_name_size].upper()
 
         player_shirt_name_bytes = [0] * shirt_name_bytes_length
-        new_name_bytes = str.encode(new_name)
+        new_name_bytes = str.encode(new_name,"utf-8")
         player_shirt_name_bytes[: len(new_name_bytes)] = new_name_bytes
 
         for i, byte in enumerate(player_shirt_name_bytes):
@@ -623,21 +611,12 @@ def get_stats(player_id, of):
     """
     player_club = "FREE AGENT"
     for i in range(len(of.clubs)):
-        club_validation=get_players_clubs(of,i+last_nat_team_id + 1)
+        club_validation=get_players_clubs(of,i)
         #print(club_validation)
         if player_id in club_validation:
             player_club=of.clubs[i].name
             break
     if player_id in get_players_ml(of): player_club = "ML UNITED"
-
-
-    player_national_team = "NOT REGISTERED"
-    for i in range(last_nat_team_id + 1):
-        club_validation=get_players_nations(of,i)
-        #print(club_validation)
-        if player_id in club_validation:
-            player_national_team=national_teams[i]
-            break
 
 
     player_special_flag = ""
@@ -705,25 +684,11 @@ def get_stats(player_id, of):
     #player_finger_band, player_shirt, player_sleeves, player_under_short, player_under_short_colour, player_socks, player_tape,
     
     # Player registration in club and national team
-    player_national_team, player_club, player_special_flag,
+    #player_national_team, 
+    player_club, player_special_flag,
     
     ]
     return list_csv
-
-#players address and ids
-start_address = 34704
-start_address_edited = 11876
-last_player_id = 5164
-first_edited_id = 32768
-total_edit = 184
-first_unused = 5165
-first_shop = 4818
-first_ml_youth = 4978
-first_ml_old = 5155
-
-shop_players = [*range(first_shop, first_ml_youth, 1)]
-ml_youth = [*range(first_ml_youth, first_ml_old, 1)]
-ml_old = [*range(first_ml_old, first_unused, 1)]
 
 """
 *Nationalities tip:
@@ -733,49 +698,35 @@ in one result you will notice you have the national teams names and then the clu
 there you will have the right order of nationalities that's the right way to get them ;)
 or just use the formula done in the pes editor that also works, but i prefer to use something standard
 """
-
+"""
 nationalities = [
-"Austria", "Belgium", "Bulgaria", "Croatia", "Czech Republic", 
-"Denmark", "England", "Finland", "France", "Germany", "Greece", 
-"Hungary", "Ireland", "Israel", "Italy", "Netherlands", "Northern Ireland", 
-"Norway", "Poland", "Portugal", "Romania", "Russia", "Scotland", 
-"Serbia and Montenegro", "Slovakia", "Slovenia", "Spain", "Sweden", 
-"Switzerland", "Turkey", "Ukraine", "Wales", "Angola", "Cameroon", 
-"Cote d'Ivoire", "Ghana", "Nigeria", "South Africa", "Togo", "Tunisia", 
-"Costa Rica", "Mexico", "Trinidad and Tobago", "USA", "Argentina", "Brazil", 
-"Chile", "Colombia", "Ecuador", "Paraguay", "Peru", "Uruguay", "Australia", 
-"Iran", "Japan", "Saudi Arabia", "South Korea", 
-"Montenegro", "Benin", "Burkina Faso", "Burundi", "Cape Verde", "Congo", 
-"DR Congo", "Equatorial Guinea", "Gabon", "Gambia", "Guinea", "Kenya", 
-"Liberia", "Mali", "Rwanda", "Sierra Leone", "Zambia", "Zimbabwe", "Canada", 
-"Grenada", "Martinique", "Netherlands Antilles", "New Zealand", 
-"Nation Free","Solid Color","My Team",
-"Albania", "Andorra", "Armenia", "Azerbaijan", "Belarus", "Bosnia and Herzegovina", 
-"Cyprus", "Estonia", "Faroe Islands", "Georgia", "Iceland", "Kazakhstan", 
-"Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", 
-"Malta", "Moldova", "San Marino", "Algeria", "Egypt", "Morocco", "Senegal", 
-"Honduras", "Jamaica", "Bolivia", "Venezuela", "Bahrain", "China", "Indonesia", 
-"Iraq", "Malaysia", "Oman", "Qatar", "Thailand", "United Arab Emirates", 
-"Uzbekistan", "Vietnam",
+    "Ireland", "Italy", "England", "Wales", "Ukraine", "Austria", "Netherlands",
+    "Greece", "Northern Ireland", "Croatia", "Switzerland", "Sweden", "Scotland", 
+    "Spain", "Slovakia", "Slovenia", "Serbia and Montenegro", "Czech Republic", 
+    "Denmark", "Germany", "Turkey", "Norway", "Hungary", "Finland", "France", 
+    "Bulgaria", "Belgium", "Poland", "Portugal", "Latvia", "Romania", "Russia",
+    "Angola", "Ghana", "Cameroon", "Cote d'Ivoire", "Tunisia", "Togo", "Nigeria",
+    "South Africa", "USA", "Costa Rica", "Mexico", "Trinidad and Tobago", 
+    "Argentina", "Uruguay", "Ecuador", "Colombia", "Chile", "Paraguay", "Brazil", 
+    "Peru", "Iran", "South Korea", "Saudi Arabia", "Japan", "Australia", "Israel", 
+    "Estonia", "Bosnia and Herzegovina", "Jamaica", "Honduras", "Venezuela?1", 
+    "Bolivia?2", "Uzbekistan", "China", "Albania", "Cyprus", "Iceland", "Luxembourg", 
+    "Macedonia", "Armenia?3", "Belarus", "Georgia", "Moldova", "Algeria", "Burkina Faso", 
+    "Cape Verde", "Congo", "DR Congo?4", "Egypt", "Equatorial Guinea", "Gabon", 
+    "The Gambia?5", "Guinea", "Guinea-Bissau", "Gambia?6", "Liberia", "Libya", "Mali?7", 
+    "Mauritius?8", "Morocco?9", "Mozambique", "Namibia", "Senegal", "Sierra Leone", 
+    "Zambia", "Zimbabwe", "Canada", "Grenada?11", "Guadeloupe?12", "Haiti", "Martinique?13",
+    "Netherlands Antilles", "Oman", "New Zealand", "Free Nationality",
 ]
+"""
+nationalities = [f"Nation {i + 1}" for i in range(117)] + ["Free Nationality"]
+#print((nationalities))
 #print(len(nationalities))
 national_teams=[x.upper() for x in [
-    "Austria", "Belgium", "Bulgaria",
-    "Croatia", "Czech Republic", "Denmark", "England", "Finland",
-    "France", "Germany", "Greece", "Hungary", "Ireland", "Israel",
-    "Italy", "Netherlands", "Northern Ireland", "Norway", "Poland",
-    "Portugal", "Romania", "Russia", "Scotland",
-    "Serbia and Montenegro", "Slovakia", "Slovenia", "Spain", "Sweden",
-    "Switzerland", "Turkey", "Ukraine", "Wales", "Angola",
-    "Cameroon", "Cote d'Ivoire", "Ghana", "Nigeria",
-    "South Africa", "Togo", "Tunisia", "Costa Rica", "Mexico",
-    "Trinidad and Tobago", "USA", "Argentina", "Brazil", "Chile",
-    "Colombia", "Ecuador", "Paraguay", "Peru", "Uruguay",
-    "Australia", "Iran", "Japan", "Saudi Arabia", "South Korea",
-    "Classic Argentina", "Classic Brazil", "Classic England", 
-    "Classic France", "Classic Germany", "Classic Italy", "Classic Netherlands"
 ]
 ]
+
+#print(len(national_teams))
 
 body_types = [
     [-1, 0, -2, -2, -1, 0, -1, 1, 0, -2],
@@ -808,6 +759,7 @@ fake_players = [
 # Information taken from  https://www.neoseeker.com/forums/25233/t548037-tricks-skills/21.htm and also testing in game
 
 elastico_players = [
+    """
     1055, #Ronaldinho
     1741, #James Milner
     1045, #Robinho
@@ -819,5 +771,22 @@ elastico_players = [
     2751, #Taddei
     2548, #Ibrahimovic
     3475, #Drenthe
+    """
 ]
 
+#players address and ids
+start_address = 39608
+start_address_edited = 16780
+#last_player_id = 4872
+first_edited_id = 32768
+total_edit = 184
+first_unused = 4504
+total_players = 4540
+first_shop = 4157
+first_ml_youth = 4317
+first_ml_old = 4494
+
+shop_players = [*range(first_shop, first_ml_youth, 1)]
+#shop_players = get_shop_players(of)
+ml_youth = [*range(first_ml_youth, first_ml_old, 1)]
+ml_old = [*range(first_ml_old, first_unused, 1)]
