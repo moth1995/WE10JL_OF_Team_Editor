@@ -57,7 +57,8 @@ def create_csv(filename):
             #"NECK WARMER", "NECKLACE TYPE", "NECKLACE COLOUR", "WISTBAND", "WISTBAND COLOUR", "FRIENDSHIP BRACELET", "FRIENDSHIP BRACELET COLOUR", "GLOVES",
             #"FINGER BAND", "SHIRT", "SLEEVES", "UNDER SHORT", "UNDER SHORT COLOUR", "SOCKS", "TAPE",
             
-            "NATIONAL TEAM", "CLUB TEAM", "SPECIAL FLAG",
+            #"NATIONAL TEAM", 
+            "CLUB TEAM", "SPECIAL FLAG",
             ])
             
             csv_escribir.writerow(csv_columns)
