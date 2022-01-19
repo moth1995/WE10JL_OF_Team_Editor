@@ -1,4 +1,4 @@
-from COFPES_OF_Editor_7.editor.option_file import OptionFile
+from editor.option_file import OptionFile
 
 def get_of_names(of):
 
