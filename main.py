@@ -2,17 +2,17 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import filedialog
-from COFPES_OF_Editor_7.editor.option_file import OptionFile
-from COFPES_OF_Editor_7.editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte
+from editor.option_file import OptionFile
+from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte
 
 from getnames import get_of_names
-from swap_teams import swap_teams_data, swap_nations_data
+from swap_teams import swap_teams_data
 from swap_teams import encrypt_and_save
-from player_data import get_stats, set_value, get_value, last_player_id, first_unused, first_edited_id, total_edit,national_teams
+from player_data import get_stats, set_value, get_value, first_unused, first_edited_id, total_edit, national_teams, total_players
 from export_csv import write_csv
 from import_csv import load_csv
 from of_crypt import of_encrypter, of_decrypter
-from teams import get_players_nations, get_players_clubs, get_formation, get_formation_generic, set_formation, set_formation_generic, first_nat_team_id, last_nat_team_id, first_club_team_id, last_club_team_id
+from teams import get_players_clubs, get_formation, get_formation_generic, set_formation, set_formation_generic, first_club_team_id, last_club_team_id
 
 
 def export_formation_btn_action():
@@ -44,8 +44,6 @@ def import_formation_btn_action():
     except EnvironmentError as err: # parent of IOError, OSError *and* WindowsError where available
         messagebox.showerror(title=appname,message="Error while reading the file, please run as admin\nError: {0}".format(err))
 
-
-
 def decrypt_btn_action():
     root.temp_file = filedialog.asksaveasfile(initialdir=".",title="Create your decrypted OF", mode='wb', filetypes=(("Bin files","*.bin"),("All files", "*")), defaultextension=".bin")
     if of_decrypter(of, root.temp_file.name):
@@ -62,31 +60,16 @@ def encrypt_btn_action():
         else:
             messagebox.showerror(title=appname,message="Error while reading file, please run as admin")
 
-
 def export_all_to_csv():
     #print(csv_team_cmb.current())
     option_selected = csv_team_cmb.current()
     if option_selected ==0:
         #print(extra_players_check.get())
-        players_ids=[*range(1, last_player_id + 1, 1)]
+        players_ids=[*range(1, first_unused, 1)]
         if extra_players_check.get():
-            players_ids=[*range(1, first_unused, 1)]+[*range(first_edited_id, first_edited_id + total_edit, 1)]
+            players_ids=[*range(1, total_players, 1)]+[*range(first_edited_id, first_edited_id + total_edit, 1)]
         all_data=[]
         for player in players_ids:
-            all_data.append(get_stats(player, of))
-        root.new_file = filedialog.asksaveasfile(initialdir=".",title="Create your CSV file", mode='w', filetypes=(("CSV files","*.csv"),("All files", "*")), defaultextension=".csv")
-        if root.new_file is None: # asksaveasfile return `None` if dialog closed with "cancel".
-            return
-        if write_csv(root.new_file.name, all_data):
-            messagebox.showinfo(title=appname,message="CSV file created!")
-        else:
-            messagebox.showerror(title=appname,message="Error while creating CSV file, please run as admin")
-    elif first_nat_team_id <= option_selected - 1 <= last_nat_team_id:
-        players_ids=get_players_nations(of,option_selected - 1)
-        all_data=[]
-        for player in players_ids:
-            if player==0:
-                continue
             all_data.append(get_stats(player, of))
         root.new_file = filedialog.asksaveasfile(initialdir=".",title="Create your CSV file", mode='w', filetypes=(("CSV files","*.csv"),("All files", "*")), defaultextension=".csv")
         if root.new_file is None: # asksaveasfile return `None` if dialog closed with "cancel".
@@ -100,8 +83,7 @@ def export_all_to_csv():
         #print(players_ids)
         all_data=[]
         for player in players_ids:
-            if player==0:
-                continue
+            if player==0: continue
             all_data.append(get_stats(player, of))
         root.new_file = filedialog.asksaveasfile(initialdir=".",title="Create your CSV file", mode='w', filetypes=(("CSV files","*.csv"),("All files", "*")), defaultextension=".csv")
         if root.new_file is None: # asksaveasfile return `None` if dialog closed with "cancel".
@@ -130,15 +112,7 @@ def swap_list_positions(teams_list, pos1, pos2):
 
 def swap_btn_action():
     global teams_list
-    if ((first_nat_team_id <= team_a_cmb.current() <= last_nat_team_id) and (first_nat_team_id <= team_b_cmb.current() <= last_nat_team_id)):
-        if swap_nations_data(of.data, team_a_cmb.current(), team_b_cmb.current(), swap_kits_check.get()):
-            teams_list=swap_list_positions(teams_list, team_a_cmb.current(), team_b_cmb.current())
-            team_a_cmb.config(values=teams_list)
-            team_b_cmb.config(values=teams_list)
-            messagebox.showinfo(title=appname,message="Nations swapped!")        
-        else:
-            messagebox.showerror(title=appname,message="Can't swap the same team!!!")
-    elif ((first_club_team_id <= team_a_cmb.current() <= last_club_team_id) and (first_club_team_id <= team_b_cmb.current() <= last_club_team_id)):
+    if ((first_club_team_id <= team_a_cmb.current() <= last_club_team_id) and (first_club_team_id <= team_b_cmb.current() <= last_club_team_id)):
         if swap_teams_data(of.data, team_a_cmb.current(), team_b_cmb.current(), swap_kits_check.get()):
             teams_list=swap_list_positions(teams_list, team_a_cmb.current(), team_b_cmb.current())
             team_a_cmb.config(values=teams_list)
@@ -155,7 +129,7 @@ def save_btn_action():
     else:
         messagebox.showerror(title=appname,message="Error while saving, please run as admin")
 
-appname='PES2008 OF Team Editor'
+appname='WE10 OF Team Editor'
 root = Tk()
 root.title(appname)
 w = 800 # width for the Tk root
@@ -171,7 +145,7 @@ y = (hs/2) - (h/2)
 root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 #Once it start it will ask to select the option file
 root.filename=""
-root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("PES2008 PS2 Option File","BESLES-54913P2K8OPT .psu .xps"),]))
+root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("WE10 PS2 Option File", ".psu .xps"),]))
 if root.filename!="":
     of = OptionFile(root.filename)
 else:
