@@ -1,4 +1,5 @@
-from COFPES_OF_Editor_7.editor.option_file import OptionFile
+from editor.option_file import OptionFile
+from editor.club import Club
 from teams import *
 
 def read_data(array,pos,grab):
@@ -14,8 +15,8 @@ def encrypt_and_save(of):
         return False
 
 def swap_teams_data(data,team_a_id,team_b_id, kits_flag):
-    team_a_id-=64
-    team_b_id-=64
+    #team_a_id-=64
+    #team_b_id-=64
     #print(type(team_a_id))
     #print(type(team_b_id))
     if team_a_id==team_b_id:
@@ -79,48 +80,6 @@ def swap_teams_data(data,team_a_id,team_b_id, kits_flag):
 
     return True
 
-def swap_nations_data(data,team_a_id,team_b_id, kits_flag):
-    #print(type(team_a_id))
-    #print(type(team_b_id))
-    if team_a_id==team_b_id:
-        return False
-    team_a_players_relink = read_data(data,nations_players_relink_offset+(team_a_id*nations_players_relink_size),nations_players_relink_size)
-    team_b_players_relink = read_data(data,nations_players_relink_offset+(team_b_id*nations_players_relink_size),nations_players_relink_size)
-
-    team_a_jersey_number = read_data(data,nations_jersey_number_offset+(team_a_id*nations_jersey_number_size),nations_jersey_number_size)
-    team_b_jersey_number = read_data(data,nations_jersey_number_offset+(team_b_id*nations_jersey_number_size),nations_jersey_number_size)
-
-    # Nations names are located in the exe! you must change them with T&S Editor
-    
-    team_a_formation_data = read_data(data,nations_formation_data_offset+(team_a_id*formation_data_size),formation_data_size)
-    team_b_formation_data = read_data(data,nations_formation_data_offset+(team_b_id*formation_data_size),formation_data_size)
-
-    team_a_kits_data = read_data(data,nations_kits_data_offset+(team_a_id*nations_kits_data_size),nations_kits_data_size)
-    team_b_kits_data = read_data(data,nations_kits_data_offset+(team_b_id*nations_kits_data_size),nations_kits_data_size)
-
-
-    for i, byte in enumerate(team_a_players_relink):
-        data[nations_players_relink_offset+(team_b_id*nations_players_relink_size) + i] = byte
-    for i, byte in enumerate(team_b_players_relink):
-        data[nations_players_relink_offset+(team_a_id*nations_players_relink_size) + i] = byte
-
-    for i, byte in enumerate(team_a_jersey_number):
-        data[nations_jersey_number_offset+(team_b_id*nations_jersey_number_size) + i] = byte
-    for i, byte in enumerate(team_b_jersey_number):
-        data[nations_jersey_number_offset+(team_a_id*nations_jersey_number_size) + i] = byte
-
-    for i, byte in enumerate(team_a_formation_data):
-        data[nations_formation_data_offset+(team_b_id*formation_data_size) + i] = byte
-    for i, byte in enumerate(team_b_formation_data):
-        data[nations_formation_data_offset+(team_a_id*formation_data_size) + i] = byte
-
-    if kits_flag:
-        for i, byte in enumerate(team_a_kits_data):
-            data[nations_kits_data_offset+(team_b_id*nations_kits_data_size) + i] = byte
-        for i, byte in enumerate(team_b_kits_data):
-            data[nations_kits_data_offset+(team_a_id*nations_kits_data_size) + i] = byte
-
-    return True
 
 #Offsets definition
-clubs_names_size = 88
+clubs_names_size = Club.size
