@@ -1,4 +1,4 @@
-# PES2008_OF_Team_Editor
+# JLWE10_OF_Team_Editor
 A simple tool to edit the saga game option file and swap teams, maybe sooner it will become even more useful
 
 Hi guys! 
@@ -20,7 +20,7 @@ Until today this tool can do the following things
 -Read PSU ps2 save games  (sooner more format)
 -Decrypt/Encrypt Option File
 
-It has support for the European version, remember always make backup of your OPTION FILE!!!
+Remember always make backup of your OPTION FILE!!!
 
 
 In the future i'll add more options (i believe)
