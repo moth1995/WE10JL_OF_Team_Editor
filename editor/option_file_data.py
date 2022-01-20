@@ -1,16 +1,16 @@
 OF_BYTE_LENGTH = 1116160
 
 OF_BLOCK = [
-    12, 
-    5144, 
-    9544, 
-    16780, 
-    39608, 
-    603408, 
-    680400,
-	699548, 
-    837624, 
-    1097000, 
+    12,  # ??? some we shop info like points
+    5144, # ??? around here seems to be the we shop info
+    9544, # stadium data offset + league and competition names
+    16780, # Edited players offset
+    39608, # players offset
+    603408, # this offset + 207 = shirt number data offset + player relink + team formation
+    680400, #clubs name data offset
+	699548, # kits data offset + (not sure) logos
+    837624, # ???? not sure but possible emblems
+    1097000, # ??? full of zero i dont know for what it is use
 ]
 OF_BLOCK_SIZE = [
     4868,
