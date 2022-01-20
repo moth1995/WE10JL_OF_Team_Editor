@@ -38,6 +38,7 @@ def import_formation_btn_action():
             set_formation_generic(of, teamform_cmb.current(), bytearray(binary_file.read()))
         messagebox.showinfo(title=appname,message="Formation imported!")
         save_btn_action()
+        #save_btn_action()
     except OSError as err:
         #print("OS error: {0}".format(err))
         messagebox.showerror(title=appname,message="OS error: {0}".format(err))
@@ -101,6 +102,8 @@ def import_all_from_csv():
         if load_csv(of, root.csv_file):
             of.save_option_file()
             messagebox.showinfo(title=appname,message="CSV file imported and saved!")
+            #of.save_option_file()
+            messagebox.showinfo(title=appname,message="CSV file imported")
         else:
             messagebox.showerror(title=appname,message="Error while importing CSV file")
 
@@ -125,9 +128,14 @@ def swap_btn_action():
     
 def save_btn_action():
     if encrypt_and_save(of):
+    try:
+        of.save_option_file()
         messagebox.showinfo(title=appname,message="All changes saved")
     else:
         messagebox.showerror(title=appname,message="Error while saving, please run as admin")
+    except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
+        messagebox.showerror(title=appname,message=f"Error while saving, error type={e}, try running as admin")
+
 
 appname='WE10 OF Team Editor'
 appname='JL WE10 OF Team Editor'
