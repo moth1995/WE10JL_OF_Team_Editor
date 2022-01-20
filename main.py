@@ -130,6 +130,7 @@ def save_btn_action():
         messagebox.showerror(title=appname,message="Error while saving, please run as admin")
 
 appname='WE10 OF Team Editor'
+appname='JL WE10 OF Team Editor'
 root = Tk()
 root.title(appname)
 w = 800 # width for the Tk root
