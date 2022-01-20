@@ -13,7 +13,26 @@ from export_csv import write_csv
 from import_csv import load_csv
 from of_crypt import of_encrypter, of_decrypter
 from teams import get_players_clubs, get_formation, get_formation_generic, set_formation, set_formation_generic, first_club_team_id, last_club_team_id
+from teams import get_players_clubs, get_formation, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
+import editor.shop as Shop
 
+def intTryParse(value):
+    try:
+        return int(value)
+    except ValueError:
+        return value
+
+def shop_set_points():
+    value = intTryParse(new_points_box.get())
+    if isinstance(value, int):
+        try:
+            Shop.set_points(value,of.data)
+            points_lbl.config(text=f"Please enter a value between 0 and 99999 and press enter\nCurrent points {value}")
+            messagebox.showinfo(title=appname,message="Points set correctly")
+        except ValueError as e:
+            messagebox.showerror(title=appname,message=e)
+    else:
+        messagebox.showerror(title=appname,message="Please insert a number not a string")
 
 def export_formation_btn_action():
     try:
