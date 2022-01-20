@@ -5,15 +5,6 @@ from teams import *
 def read_data(array,pos,grab):
     return array[pos : pos + grab]
 
-def encrypt_and_save(of):
-    try:
-        #print("Saving option file...")
-        of.save_option_file()
-        #print("Option file saved.")
-        return True
-    except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
-        return False
-
 def swap_teams_data(data,team_a_id,team_b_id, kits_flag):
     #team_a_id-=64
     #team_b_id-=64
