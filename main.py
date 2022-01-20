@@ -14,6 +14,28 @@ from of_crypt import of_encrypter, of_decrypter
 from teams import get_players_clubs, get_formation, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
 import editor.shop as Shop
 import editor.stadiums as Stadiums
+import editor.leagues as Leagues
+
+
+def league_set_name():
+    try:
+        lg_new_name = leagues_box.get()
+        league_id = leagues_list_box.get(0, "end").index(leagues_list_box.get(ANCHOR))
+        Leagues.set_name(of.data, league_id, lg_new_name)
+        
+        leagues_list_box.delete(0,'end')
+        leagues_list_box.insert(END,*Leagues.get_leagues_list(of.data))
+        
+        messagebox.showinfo(title=appname,message="League name changed correctly")
+    except ValueError as e:
+        messagebox.showerror(title=appname,message=e)
+
+
+def set_leagues_box():
+    leagues_box.delete(0,END)
+    leagues_box.insert(0,leagues_list_box.get(ANCHOR))
+
+
 def stadium_set_name():
     try:
         std_new_name = stadiums_box.get()
@@ -242,7 +264,6 @@ if root.filename!="":
                 print(shift, mask)
             test=[]
     '''
-
     # Creating a menu for a better and nice gui
     my_menu=Menu(root)
     root.config(menu=my_menu)
@@ -259,7 +280,6 @@ if root.filename!="":
     shop_tab = Frame(tabs_container, width=w, height=h)
     copyright_lbl=Label(root, text="By PES Indie Team")
     thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF")
-
 
     #Swap teams tab 
 
@@ -311,6 +331,16 @@ if root.filename!="":
     stadiums_list_box.bind('<ButtonRelease-1>',lambda event: set_stadium_box())
     stadiums_list_box.insert(END,*Stadiums.get_stadium_list(of.data))
 
+    leagues_lbl = Label(stadium_league_tab, text="Insert the new league name")
+    leagues_box = Entry(stadium_league_tab, width=30)
+    leagues_box.bind('<Return>', lambda event: league_set_name())
+    leagues_list_box = Listbox(stadium_league_tab, height = 30, width = 30, exportselection=False)
+    leagues_list_box.selectedindex = 0
+    leagues_list_box.bind('<ButtonRelease-1>',lambda event: set_leagues_box())
+    leagues_list_box.insert(END,*Leagues.get_leagues_list(of.data))
+
+
+
     #Shop tab
     points=Shop.get_points(of.data)
     points_lbl = Label(shop_tab, text= f"Please enter a value between 0 and 99999 and press enter\nCurrent points {points}")
@@ -360,6 +390,10 @@ if root.filename!="":
     stadiums_lbl.place(x=205, y=20)
     stadiums_box.place(x=205, y=50)
     stadiums_list_box.place(x=5, y=20)
+    leagues_lbl.place(x=600, y=20)
+    leagues_box.place(x=600, y=50)
+    leagues_list_box.place(x=405, y=20)
+
     # Shop tab placing
 
     points_lbl.place(x=220, y=20)
@@ -383,6 +417,7 @@ if root.filename!="":
     tabs_container.add(swap_teams_tab, text="Swap Teams")
     tabs_container.add(csv_tab, text="Export/Import CSV")
     tabs_container.add(extra_tab, text="Extra")
+    tabs_container.add(stadium_league_tab, text="Stadiums & Leagues")
     tabs_container.add(shop_tab, text="Shop")
     root.resizable(False, False)
     root.mainloop()
