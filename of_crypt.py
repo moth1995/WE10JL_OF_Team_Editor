@@ -6,7 +6,7 @@ def of_encrypter(temp_file, of):
             of.data = bytearray(binary_file.read())
             # Save/encrypt the option file
             #print("Saving option file...")
-            of.save_option_file()
+            #of.save_option_file()
             #print("Option file saved.")
         return True
     except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
