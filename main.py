@@ -3,9 +3,9 @@ from tkinter import messagebox
 from tkinter import ttk
 from tkinter import filedialog
 from editor.option_file import OptionFile
+from editor.club import Club
 from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte
 
-from getnames import get_of_names
 from swap_teams import swap_teams_data
 from player_data import get_stats, set_value, get_value, first_unused, first_edited_id, total_edit, national_teams, total_players
 from export_csv import write_csv
@@ -284,7 +284,7 @@ if root.filename!="":
     #Swap teams tab 
 
     teams_list=national_teams
-    teams_list+=get_of_names(of)
+    teams_list+=[of.clubs[x].name for x in range(Club.total)]
     csv_team_list = ["---ALL PLAYERS---"] + teams_list
 
 
