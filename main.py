@@ -207,7 +207,7 @@ y = (hs/2) - (h/2)
 root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 #Once it start it will ask to select the option file
 root.filename=""
-root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("WE10 PS2 Option File", ".psu .xps"),]))
+root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("JL WE10 PS2 Option File", ".psu .xps"),]))
 if root.filename!="":
     of = OptionFile(root.filename)
 

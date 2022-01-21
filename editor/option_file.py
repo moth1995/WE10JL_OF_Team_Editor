@@ -39,7 +39,7 @@ class OptionFile:
         Return game type from supplied filename string.
         """
         game_type_map = {
-            "BESLES-54913P2K8OPT": GameType.ps2_pes,
+            "BISLPM-66595JWEXOPT": GameType.ps2_pes,
         }
         return game_type_map.get(file_name)
 
