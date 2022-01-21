@@ -21,8 +21,9 @@ class OptionFile:
     of_block_size = OF_BLOCK_SIZE
     of_key = OF_KEY
 
-    def __init__(self, file_location):
+    def __init__(self, file_location,crypt):
         self.file_location = file_location
+        self.encrypted = crypt
         self.data = bytearray()
         self.file_name = ""
         self.extension = ""
@@ -62,7 +63,8 @@ class OptionFile:
             self.header_data, self.data = file_contents[:file_size - self.of_byte_length -4], file_contents[file_size - self.of_byte_length-4:-4]
         else:
             self.data = file_contents
-        self.decrypt()
+        if self.encrypted:
+            self.decrypt()
 
         return True
 
@@ -76,9 +78,9 @@ class OptionFile:
         #self.data[50] = 1
         #self.data[5938] = 1
         #self.data[5939] = 1
-
-        self.encrypt()
-        self.checksums()
+        if self.encrypted:
+            self.encrypt()
+            self.checksums()
 
         of_file = open(file_location, "wb")
 

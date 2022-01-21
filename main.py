@@ -190,7 +190,6 @@ def save_btn_action():
     except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
         messagebox.showerror(title=appname,message=f"Error while saving, error type={e}, try running as admin")
 
-
 appname='JL WE10 OF Team Editor'
 root = Tk()
 root.title(appname)
@@ -209,7 +208,8 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 root.filename=""
 root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("JL WE10 PS2 Option File", ".psu .xps"),]))
 if root.filename!="":
-    of = OptionFile(root.filename)
+    isencrypted = messagebox.askyesno(title=appname, message="Is your option file encrypted?")
+    of = OptionFile(root.filename,isencrypted)
 
     # CODE BELOW WAS DONE ONLY FOR DEBUGGING, IF YOU WANT TO FIND THE SHIFT AND MASK FOR A STAT
     # YOU JUST NEED TO PASS PLAYER IDS THAT YOU WILL USE TO COMPARE AND WRITE THE POSSIBLE VALUES IN THE LIST CALLED TEST
