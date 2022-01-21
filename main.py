@@ -282,9 +282,8 @@ if root.filename!="":
     thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF")
 
     #Swap teams tab 
-
-    teams_list=national_teams
-    teams_list+=[of.clubs[x].name for x in range(Club.total)]
+    club_teams_list = [of.clubs[x].name for x in range(Club.total)]
+    teams_list=national_teams + club_teams_list
     csv_team_list = ["---ALL PLAYERS---"] + teams_list
 
 
