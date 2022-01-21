@@ -18,7 +18,7 @@ def get_value(of, player_id, offset, shift, mask, stat_name):
 #Most of the code for the function below was taken from peterc10 file player.py thanks a lot pete!
 
 def get_names(player_id, of):
-    print(player_id)
+    #print(player_id)
     name = "???"
     name_bytes_length = 32
     player_offset = start_address + player_id * 124
@@ -68,7 +68,7 @@ def get_names(player_id, of):
             shirt_name_address : shirt_name_address
             + name_bytes_length // 2
         ]
-        print(name_byte_array)
+        #print(name_byte_array)
         #print(player_id)
         shirt_name = name_byte_array.partition(b"\0")[0].decode('utf-8')
 

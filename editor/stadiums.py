@@ -9,7 +9,7 @@ def get_offset(stadium):
     return START_ADDRESS + stadium * MAX_LEN
 
 def get_name(ba, stadium):
-    return ba[get_offset(stadium): get_offset(stadium) + MAX_LEN].partition(b"\0")[0].decode('utf-8')
+    return ba[get_offset(stadium): get_offset(stadium) + MAX_LEN].partition(b"\0")[0].decode('utf-8',"ignore")
 
 def get_stadium_list(ba):
     return [get_name(ba,i)for i in range(TOTAL)]

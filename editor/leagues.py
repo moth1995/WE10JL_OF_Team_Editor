@@ -1,3 +1,6 @@
+from codecs import ignore_errors
+
+
 TOTAL = 38
 BASE_NAME_LEN = 20
 START_ADDRESS = 13574
@@ -8,7 +11,7 @@ def get_offset(league):
     return START_ADDRESS + league * SIZE
 
 def get_name(ba, league):
-    return ba[get_offset(league) + BASE_NAME_LEN + 1: get_offset(league) + BASE_NAME_LEN + 1 + MAX_LEN].partition(b"\0")[0].decode('utf-8')
+    return ba[get_offset(league) + BASE_NAME_LEN + 1: get_offset(league) + BASE_NAME_LEN + 1 + MAX_LEN].partition(b"\0")[0].decode('utf-8',"ignore")
 
 def get_leagues_list(ba):
     return [get_name(ba,i)for i in range(TOTAL)]
