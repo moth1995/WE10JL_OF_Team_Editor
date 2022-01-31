@@ -8,7 +8,6 @@ from PIL import Image
 
 from editor.option_file import OptionFile
 from editor.club import Club
-from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte
 from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte, hex_to_rgb
 
 from swap_teams import swap_teams_data
@@ -104,7 +103,7 @@ def set_club_data():
 def league_set_name():
     try:
         lg_new_name = leagues_box.get()
-        league_id = leagues_list_box.get(0, "end").index(leagues_list_box.get(ANCHOR))
+        league_id = leagues_list_box.get(0, "end").index(leagues_list_box.get(leagues_list_box.curselection()))
         Leagues.set_name(of.data, league_id, lg_new_name)
         
         leagues_list_box.delete(0,'end')
@@ -117,17 +116,20 @@ def league_set_name():
 
 def set_leagues_box():
     leagues_box.delete(0,END)
-    leagues_box.insert(0,leagues_list_box.get(ANCHOR))
+    leagues_box.insert(0,leagues_list_box.get(leagues_list_box.curselection()))
 
 
 def stadium_set_name():
     try:
         std_new_name = stadiums_box.get()
-        stadium_id = stadiums_list_box.get(0, "end").index(stadiums_list_box.get(ANCHOR))
+        stadium_id = stadiums_list_box.get(0, "end").index(stadiums_list_box.get(stadiums_list_box.curselection()))
         Stadiums.set_name(of.data, stadium_id, std_new_name)
         
         stadiums_list_box.delete(0,'end')
         stadiums_list_box.insert(END,*Stadiums.get_stadium_list(of.data))
+
+        clubs_stad_cmb['value'] = Stadiums.get_stadium_list(of.data)
+
         
         messagebox.showinfo(title=appname,message="Stadium name changed correctly")
     except ValueError as e:
@@ -135,10 +137,8 @@ def stadium_set_name():
 
 
 def set_stadium_box():
-    #print(stadiums_list_box.get(ANCHOR))
-    #print(stadiums_list_box.get(0, "end").index(stadiums_list_box.get(ANCHOR)))
     stadiums_box.delete(0,END)
-    stadiums_box.insert(0,stadiums_list_box.get(ANCHOR))
+    stadiums_box.insert(0,stadiums_list_box.get(stadiums_list_box.curselection()))
 
 
 def intTryParse(value):
@@ -382,12 +382,10 @@ if root.filename!="":
     copyright_lbl=Label(root, text="By PES Indie Team")
     thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF")
 
-    #Swap teams tab 
     #Swap teams tab
     club_teams_list = [of.clubs[x].name for x in range(Club.total)]
     teams_list=national_teams + club_teams_list
     csv_team_list = ["---ALL PLAYERS---"] + teams_list
-
 
 
     team_a_lbl=Label(swap_teams_tab, text="Team A")
@@ -465,7 +463,7 @@ if root.filename!="":
     stadiums_box.bind('<Return>', lambda event: stadium_set_name())
     stadiums_list_box = Listbox(stadium_league_tab, height = 30, width = 30, exportselection=False)
     stadiums_list_box.selectedindex = 0
-    stadiums_list_box.bind('<ButtonRelease-1>',lambda event: set_stadium_box())
+    stadiums_list_box.bind('<<ListboxSelect>>',lambda event: set_stadium_box())
     stadiums_list_box.insert(END,*Stadiums.get_stadium_list(of.data))
 
     leagues_lbl = Label(stadium_league_tab, text="Insert the new league name")
@@ -473,7 +471,7 @@ if root.filename!="":
     leagues_box.bind('<Return>', lambda event: league_set_name())
     leagues_list_box = Listbox(stadium_league_tab, height = 30, width = 30, exportselection=False)
     leagues_list_box.selectedindex = 0
-    leagues_list_box.bind('<ButtonRelease-1>',lambda event: set_leagues_box())
+    leagues_list_box.bind('<<ListboxSelect>>',lambda event: set_leagues_box())
     leagues_list_box.insert(END,*Leagues.get_leagues_list(of.data))
 
 
