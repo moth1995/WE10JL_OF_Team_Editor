@@ -1,6 +1,5 @@
 import os
-import itertools
-
+from pathlib import Path
 from enum import Enum, auto
 
 from .option_file_data import (
@@ -49,7 +48,10 @@ class OptionFile:
         Decrypt supplied file and set OF data.
         """
         of_file = open(self.file_location, "rb")
-        file_name,extension = os.path.basename(of_file.name).split('.')
+        file_name = Path(of_file.name).stem
+        extension = Path(of_file.name).suffix
+        print(file_name, extension)
+        print(type(file_name), type(extension))
         file_size = os.stat(of_file.name).st_size
         self.file_name = file_name
         self.extension = extension
@@ -57,9 +59,9 @@ class OptionFile:
         file_contents = bytearray(of_file.read())
         of_file.close()
 
-        if self.extension == "psu":
+        if self.extension == ".psu":
             self.header_data, self.data = file_contents[:file_size - self.of_byte_length], file_contents[file_size - self.of_byte_length:]
-        elif self.extension == "xps":
+        elif self.extension == ".xps":
             self.header_data, self.data = file_contents[:file_size - self.of_byte_length -4], file_contents[file_size - self.of_byte_length-4:-4]
         else:
             self.data = file_contents
@@ -90,10 +92,7 @@ class OptionFile:
         elif self.extension == "xps":
             of_file.write(self.header_data)
             of_file.write(self.data)
-            of_file.write(0)
-            of_file.write(0)
-            of_file.write(0)
-            of_file.write(0)
+            of_file.write(bytearray(4))
         else:
             of_file.write(self.data)
         
