@@ -2,9 +2,14 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import colorchooser
+from PIL import ImageTk
+from PIL import Image
+
 from editor.option_file import OptionFile
 from editor.club import Club
 from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte
+from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte, hex_to_rgb
 
 from swap_teams import swap_teams_data
 from player_data import get_stats, set_value, get_value, first_unused, first_edited_id, total_edit, national_teams, total_players
@@ -15,6 +20,85 @@ from teams import get_players_clubs, get_formation, get_formation_generic, set_f
 import editor.shop as Shop
 import editor.stadiums as Stadiums
 import editor.leagues as Leagues
+
+
+def update_color_supp(color_order, color_index):
+    hex_color_list = [
+    "#000000", "#0000ca", "#c20200", "#ffbfc5", "#acff2e", 
+    "#aad6e6", "#fcff00", "#f7f8f5", "#7d7e7b", "#00047a", 
+    "#870001", "#81007f", "#006100", "#fed500", "#fea500", 
+        ]
+    color = hex_color_list[color_index]
+    if color_order=="c1":
+        clubs_sup_c1_lbl.configure(background=color)
+    elif color_order=="c2":
+        clubs_sup_c2_lbl.configure(background=color)
+    else:
+        raise ValueError
+
+def update_club_val():
+    club_id = clubs_list_box.get(0, "end").index(clubs_list_box.get(clubs_list_box.curselection()))
+    of.clubs[club_id].update_name(clubs_box.get())
+    of.clubs[club_id].update_abbr(clubs_abbr_box.get())
+    of.clubs[club_id].update_stadium(clubs_stad_cmb.current())
+    of.clubs[club_id].update_flag(clubs_flag_cmb.current())
+    of.clubs[club_id].update_color1(hex_to_rgb(clubs_color1_btn['bg']))
+    of.clubs[club_id].update_color2(hex_to_rgb(clubs_color2_btn['bg']))
+    of.clubs[club_id].update_supp_color(clubs_sup_c1_cmb.current(), clubs_sup_c2_cmb.current())
+
+    #of.clubs[club_id].update_emblem(???)
+    # update the club_list
+    update_teamlist()
+
+def update_color1_btn():
+    my_color = colorchooser.askcolor()
+    clubs_color1_btn.configure(bg=my_color[1])
+    update_flag_lbl()
+
+def update_color2_btn():
+    my_color = colorchooser.askcolor()
+    clubs_color2_btn.configure(bg=my_color[1])
+    update_flag_lbl()
+
+def update_flag_lbl():
+    flag_id = str(clubs_flag_cmb.current())
+    img = (Image.open("img/backflag" + flag_id + ".png").convert('RGB'))
+    width = img.size[0] 
+    height = img.size[1] 
+    for i in range(0,width):# process all pixels
+        for j in range(0,height):
+            data = img.getpixel((i,j))
+            if (data[0]==0 and data[1]==0 and data[2]==0):
+                img.putpixel((i,j),tuple(hex_to_rgb(clubs_color1_btn['bg'])))
+            elif (data[0]==255 and data[1]==255 and data[2]==255):
+                img.putpixel((i,j),tuple(hex_to_rgb(clubs_color2_btn['bg'])))
+    img = ImageTk.PhotoImage(img)
+    clubs_flag_img_lbl.configure(image=img)
+    clubs_flag_img_lbl.image =img
+
+def set_club_data():
+    # set the name to the entry box
+    club_id = clubs_list_box.get(0, "end").index(clubs_list_box.get(clubs_list_box.curselection()))
+    clubs_box.delete(0,END)
+    clubs_box.insert(0,clubs_list_box.get(clubs_list_box.curselection()))
+    # set the abbr name to the entry box
+    clubs_abbr_box.delete(0,END)
+    clubs_abbr_box.insert(0,of.clubs[club_id].abbr)
+    # set the stadium
+    clubs_stad_cmb.current(of.clubs[club_id].stadium)
+    # set flag style
+    clubs_flag_cmb.current(of.clubs[club_id].flag_style)
+    # set colours into the buttons
+    clubs_color1_btn.configure(bg=of.clubs[club_id].color1)
+    clubs_color2_btn.configure(bg=of.clubs[club_id].color2)
+    # Set the flag style and colours
+    update_flag_lbl()
+    # set colours into the labels
+    update_color_supp("c1",of.clubs[club_id].supp_color_c1)
+    update_color_supp("c2",of.clubs[club_id].supp_color_c2)
+    # set the selected colour in combo box
+    clubs_sup_c1_cmb.current(of.clubs[club_id].supp_color_c1)
+    clubs_sup_c2_cmb.current(of.clubs[club_id].supp_color_c2)
 
 
 def league_set_name():
@@ -190,6 +274,22 @@ def save_btn_action():
     except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
         messagebox.showerror(title=appname,message=f"Error while saving, error type={e}, try running as admin")
 
+def update_teamlist():
+    """
+    Updates every gui element that use the teamlist 
+    """
+    club_teams_list = [of.clubs[x].name for x in range(Club.total)]
+    teams_list=national_teams + club_teams_list
+    csv_team_list = ["---ALL PLAYERS---"] + teams_list
+    csv_team_cmb['value'] = csv_team_list
+    team_a_cmb['value'] = teams_list
+    team_b_cmb['value'] = teams_list
+    teamform_cmb['value'] = teams_list
+    teamform_cmb.current(0)
+    clubs_list_box.delete(0,END)
+    clubs_list_box.insert(END,*club_teams_list)
+
+
 appname='JL WE10 OF Team Editor'
 root = Tk()
 root.title(appname)
@@ -276,12 +376,14 @@ if root.filename!="":
     swap_teams_tab=Frame(tabs_container, width=w, height=h)
     csv_tab=Frame(tabs_container, width=w, height=h)
     extra_tab=Frame(tabs_container, width=w, height=h)
+    clubs_tab = Frame(tabs_container, width=w, height=h)
     stadium_league_tab = Frame(tabs_container, width=w, height=h)
     shop_tab = Frame(tabs_container, width=w, height=h)
     copyright_lbl=Label(root, text="By PES Indie Team")
     thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF")
 
     #Swap teams tab 
+    #Swap teams tab
     club_teams_list = [of.clubs[x].name for x in range(Club.total)]
     teams_list=national_teams + club_teams_list
     csv_team_list = ["---ALL PLAYERS---"] + teams_list
@@ -320,6 +422,42 @@ if root.filename!="":
     teamform_cmb.current(0)
     exp_formation_btn = Button(extra_tab, text="Export team\nformation", command=lambda: export_formation_btn_action())
     imp_formation_btn = Button(extra_tab, text="Import team\nformation", command=lambda: import_formation_btn_action())
+
+    # Clubs tab
+
+    clubs_list_box = Listbox(clubs_tab, height = 30, width = 30, exportselection=False)
+    clubs_list_box.selectedindex = 0
+    clubs_list_box.bind('<<ListboxSelect>>',lambda event: set_club_data())
+    clubs_list_box.delete(0,END)
+    clubs_list_box.insert(END,*club_teams_list)
+
+    clubs_name_lbl = Label(clubs_tab,text="Team name")
+    clubs_box = Entry(clubs_tab, width=30)
+    clubs_abbr_box = Entry(clubs_tab, width=15)
+    clubs_stad_lbl = Label(clubs_tab,text="Home stadium")
+    clubs_stad_cmb = ttk.Combobox(clubs_tab, state="readonly", value=Stadiums.get_stadium_list(of.data), width=30)
+    clubs_flag_lbl = Label(clubs_tab,text="Flag")
+    clubs_flag_img_lbl = Label(clubs_tab,borderwidth=2, relief="solid")
+    clubs_flag_cmb = ttk.Combobox(clubs_tab, state="readonly", value=[f"Flag Background {i}" for i in range(12)], width=30)
+    clubs_flag_cmb.bind('<<ComboboxSelected>>', lambda event: update_flag_lbl())
+    clubs_color1_btn = Button(clubs_tab, height=2, width=5, command=lambda: update_color1_btn())
+    clubs_color2_btn = Button(clubs_tab, height=2, width=5, command=lambda: update_color2_btn())
+
+    colors_list = [
+        "Black", "Dark Blue", "Red", "Pink", "Green Yellow / Lime", 
+        "Light Blue", "Yellow", "White", "Grey", "Navy Blue", 
+        "Maroon", "Purple", "Dark Green", "Gold", "Orange",
+        ]
+    clubs_supp_lbl = Label(clubs_tab, text="Color Supporter")
+    clubs_sup_c1_lbl = Label(clubs_tab, height=2, width=5)
+    clubs_sup_c1_cmb = ttk.Combobox(clubs_tab, state="readonly", value=colors_list)
+    clubs_sup_c1_cmb.bind('<<ComboboxSelected>>', lambda event: update_color_supp("c1", clubs_sup_c1_cmb.current()))
+    clubs_sup_c2_lbl = Label(clubs_tab, height=2, width=5)
+    clubs_sup_c2_cmb = ttk.Combobox(clubs_tab, state="readonly", value=colors_list)
+    clubs_sup_c2_cmb.bind('<<ComboboxSelected>>', lambda event: update_color_supp("c2", clubs_sup_c2_cmb.current()))
+    
+    clubs_apply_btn = Button(clubs_tab, text="Apply", command=lambda: update_club_val())
+    clubs_discard_btn = Button(clubs_tab, text="Discard", command=lambda: set_club_data())
 
     #Stadium and Leagues tab
     stadiums_lbl = Label(stadium_league_tab, text="Insert the new stadium name")
@@ -385,6 +523,28 @@ if root.filename!="":
     decrypt_of_btn.place(x=300, y=280)
     encrypt_of_btn.place(x=380, y=280)
 
+    # Clubs tab placing
+
+    clubs_list_box.place(x=5, y=20)
+    clubs_name_lbl.place(x=205, y=30)
+    clubs_box.place(x=205, y=50)
+    clubs_abbr_box.place(x=205, y=80)
+    clubs_stad_lbl.place(x=205, y=100)
+    clubs_stad_cmb.place(x=205, y=120)
+    clubs_flag_lbl.place(x=205, y=150)
+    clubs_flag_img_lbl.place(x=205, y=170)
+    clubs_flag_cmb.place(x=205, y=240)
+    clubs_color1_btn.place(x=205, y=270)
+    clubs_color2_btn.place(x=260, y=270)
+
+    clubs_supp_lbl.place(x=300, y=315)
+    clubs_sup_c1_lbl.place(x=260, y=340)
+    clubs_sup_c1_cmb.place(x=205, y=380)
+    clubs_sup_c2_lbl.place(x=390, y=340)
+    clubs_sup_c2_cmb.place(x=350, y=380)
+    clubs_apply_btn.place(x=240, y=420)
+    clubs_discard_btn.place(x=300, y=420)
+
     # Stadium Leagues tab placing
     stadiums_lbl.place(x=205, y=20)
     stadiums_box.place(x=205, y=50)
@@ -410,12 +570,14 @@ if root.filename!="":
     swap_teams_tab.pack(fill="both", expand=1)
     csv_tab.pack(fill="both", expand=1)
     extra_tab.pack(fill="both", expand=1)
+    clubs_tab.pack(fill="both", expand=1)
     stadium_league_tab.pack(fill="both", expand=1)
     shop_tab.pack(fill="both", expand=1)
 
     tabs_container.add(swap_teams_tab, text="Swap Teams")
     tabs_container.add(csv_tab, text="Export/Import CSV")
     tabs_container.add(extra_tab, text="Extra")
+    tabs_container.add(clubs_tab, text="Clubs")
     tabs_container.add(stadium_league_tab, text="Stadiums & Leagues")
     tabs_container.add(shop_tab, text="Shop")
     root.resizable(False, False)
