@@ -10,6 +10,7 @@ from .option_file_data import (
 )
 
 from .club import Club
+from .logo import Logo
 
 from .utils.common_functions import bytes_to_int, zero_fill_right_shift
 
@@ -32,6 +33,7 @@ class OptionFile:
         self.read_option_file()
 
         self.set_clubs()
+        self.set_logos()
         #for club in self.clubs: print(club.name)
 
     def get_game_type(self, file_name):
@@ -183,6 +185,15 @@ class OptionFile:
         for i in range(Club.total):
             club = Club(self, i)
             self.clubs.append(club)
+
+    def set_logos(self):
+        """
+        Load all logos from OF data and add to logos list.
+        """
+        self.logos = []
+        for i in range(Logo.total):
+            logo = Logo(self, i)
+            self.logos.append(logo)
 
 
 class GameType(Enum):
