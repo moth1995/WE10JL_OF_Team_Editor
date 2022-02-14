@@ -35,7 +35,7 @@ class OptionFile:
 
         self.set_clubs()
         self.set_logos()
-        #for club in self.clubs: print(club.name)
+        self.set_players()
 
     def get_game_type(self, file_name):
         """
@@ -53,8 +53,6 @@ class OptionFile:
         of_file = open(self.file_location, "rb")
         file_name = Path(of_file.name).stem
         extension = Path(of_file.name).suffix
-        print(file_name, extension)
-        print(type(file_name), type(extension))
         file_size = os.stat(of_file.name).st_size
         self.file_name = file_name
         self.extension = extension

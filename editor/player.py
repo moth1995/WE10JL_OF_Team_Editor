@@ -2,41 +2,46 @@ from .stat import Stat
 from .nationalities import Nationalities
 
 class Player:
+    start_address = 39608
+    start_address_edited = 16780
+    #last_self.idx = 4872
+    first_edited_id = 32768
+    total_edit = 184
+    first_unused = 4504
+    total_players = 4540
+    first_shop = 4157
+    first_ml_youth = 4317
+    first_ml_old = 4494
+
     def __init__(self,option_file, idx):
         self.idx = idx
         self.option_file = option_file
-        self.start_address = 39608
-        self.start_address_edited = 16780
-        #self.last_self.idx = 4872
-        self.first_edited_id = 32768
-        self.total_edit = 184
-        self.first_unused = 4504
-        self.total_players = 4540
-        self.first_shop = 4157
-        self.first_ml_youth = 4317
-        self.first_ml_old = 4494
-
-        self.name = self.option_file[:32].decode('utf-16-le')
+        self.name = self.option_file.data[:32].decode('utf-16-le')
         self.name, self.shirt_name = self.get_names()
         self.callName = Stat(self.option_file, self, 1, 0, 65535, "Callname idx")
-        self.nation = Nationalities.get_nation(Stat(self.option_file, self, 65, 0, 127, "Nationality"))
+        self.nation = Stat(self.option_file, self, 65, 0, 127, "Nationality")
         self.foot = Stat(self.option_file, self, 5, 0, 1, "Foot")
+        """
         if self.foot == 0:
             self.foot = "R"
         else:
             self.foot = "L"
+        """
         self.injury = Stat(self.option_file, self, 33, 6, 3, "Injury T")
+        
+        """
         if self.injury == 2:
             self.injury = "A"
         elif self.injury == 1:
             self.injury = "B"
         else:
             self.injury = "C"
-        self.dribSty = Stat(self.option_file, self, 6, 0, 3, "Dribble Style") + 1
-        self.freekick = Stat(self.option_file, self, 5, 1, 15, "FK Style") + 1
-        self.pkStyle = Stat(self.option_file, self, 5, 5, 7, "PK Style") + 1
-        self.dkSty = Stat(self.option_file, self, 6, 2, 3, "DK Style") + 1
-        self.age = Stat(self.option_file, self, 65, 9, 31, "Age") +15
+        """
+        self.dribSty = Stat(self.option_file, self, 6, 0, 3, "Dribble Style")# + 1
+        self.freekick = Stat(self.option_file, self, 5, 1, 15, "FK Style")# + 1
+        self.pkStyle = Stat(self.option_file, self, 5, 5, 7, "PK Style")# + 1
+        self.dkSty = Stat(self.option_file, self, 6, 2, 3, "DK Style")# + 1
+        self.age = Stat(self.option_file, self, 65, 9, 31, "Age")# +15
         #self.goal_c1 = Stat(self.option_file,self,85-48, 1, 127, "GOAL CELEBRATION 1")
         #self.goal_c2 = Stat(self.option_file,self,86-48, 0, 127, "GOAL CELEBRATION 2")
         # self.option_filefset for growth type is rigth, but i cant get the proper value in any elif, also this value seems to be related to salary self.option_file player
@@ -57,16 +62,17 @@ class Player:
         self.ss = Stat(self.option_file, self, 17, 7, 1, "SS")
         self.cf = Stat(self.option_file, self, 17, 15, 1, "CF")
         self.favSidxe = Stat(self.option_file, self, 33, 14, 3, "Fav sidxe")
+        """
         if self.favSidxe == 0:
             self.favSidxe = "R"
         elif self.favSidxe == 1:
             self.favSidxe = "L"
         else:
             self.favSidxe = "B"
-
+        """
         # Abilities
-        self.wfa = Stat(self.option_file, self, 33, 11, 7, "W Foot Acc") + 1
-        self.wff = Stat(self.option_file, self, 33, 3, 7, "W Foot Freq") + 1
+        self.wfa = Stat(self.option_file, self, 33, 11, 7, "W Foot Acc")# + 1
+        self.wff = Stat(self.option_file, self, 33, 3, 7, "W Foot Freq")# + 1
         self.attack = Stat(self.option_file, self, 7, 0, 127, "Attack")
         self.defence = Stat(self.option_file, self, 8, 0, 127, "Defense")
         self.balance = Stat(self.option_file, self, 9, 0, 127, "Balance")
@@ -91,10 +97,10 @@ class Player:
         self.tech = Stat(self.option_file, self, 29, 0, 127, "Tech")
         self.aggress = Stat(self.option_file, self, 30, 0, 127, "Aggression")
         self.mental = Stat(self.option_file, self, 31, 0, 127, "Mentality")
-        self.consistency = Stat(self.option_file, self, 33, 0, 7, "Consistency") + 1
+        self.consistency = Stat(self.option_file, self, 33, 0, 7, "Consistency")# + 1
         self.gkAbil = Stat(self.option_file, self, 32, 0, 127, "GK")
         self.team = Stat(self.option_file, self, 28, 0, 127, "Team Work")
-        self.condition = Stat(self.option_file, self, 33, 8, 7, "Condition") + 1
+        self.condition = Stat(self.option_file, self, 33, 8, 7, "Condition")# + 1
         
         # Special Abilities
         self.drib = Stat(self.option_file, self, 21, 7, 1, "Dribbling")
@@ -126,7 +132,8 @@ class Player:
         
         # Face menu
         self.face_type = Stat(self.option_file,self,55, 0, 3, "face TYPE")
-        if self.face_type == 0: 
+        """
+        if self.face_type == 0:
             self.face_type = "BUILD"
         elif self.face_type == 1:
             self.face_type = "PRESET SPECIAL"
@@ -134,10 +141,11 @@ class Player:
             self.face_type = "PRESET NORMAL"
         else:
             self.face_type = "ERROR"
-        self.skin_colour = Stat(self.option_file,self, 41, 6, 3, "skin colour") + 1    
+        """
+        self.skin_colour = Stat(self.option_file,self, 41, 6, 3, "skin colour")# + 1
         #self.head_height = Stat(self.option_file,self, 91-48, 3, 15, "head height") - 7
         #self.head_widxth = Stat(self.option_file,self, 91-48, 7, 15, "head widxth") - 7
-        self.face_idx = Stat(self.option_file,self, 53, 5, 511, "face idx") + 1
+        self.face_idx = Stat(self.option_file,self, 53, 5, 511, "face idx")# + 1
         #self.head_ov_pos = Stat(self.option_file,self, 124-48,5, 7, "Head overall position") - 3
         
         # Brows menu
@@ -205,7 +213,7 @@ class Player:
         # The variable below will get the Hairstyle idx but we have to return many other variables such a hair type, shape, front, volume, darkness and bandana
         # Millions self.option_file thanks to Pato_lucas18 for this code who save me from doom
         self.hair =  Stat(self.option_file,self,45, 0, 2047, "Hair idx")
-        
+        """
         # Bald
         if 0 <= self.hair <= 3:
             self.hair_type = "BALD"
@@ -414,22 +422,25 @@ class Player:
             self.hair_bandana = 1        
         # Another case that should not happen... just to return a value :)
         else:
-            self.hair_type = "OUT self.option_file RANGE ERROR"
+            self.hair_type = "OUT OF RANGE ERROR"
             self.hair_shape = self.hair
             self.hair_front = 1
             self.hair_volume = 1
             self.hair_darkness = 1
             self.hair_bandana = 1
-
+        """
         # Hair colour menu
         #self.hair_colour_config = Stat(self.option_file, self, 94-48, 3, 63, "hair colour config") + 1
         #self.hair_rgb_r = (Stat(self.option_file, self, 102-48, 5, 63, "hair colour rgb R") - 63)*-1
         #self.hair_rgb_g = (Stat(self.option_file, self, 103-48, 3, 63, "hair colour rgb G") - 63)*-1
         #self.hair_rgb_b = (Stat(self.option_file, self, 104-48, 1, 63, "hair colour rgb B") - 63)*-1
+        
+        """
         # Hair bandana menu
         if self.hair_bandana==4:
             self.hair_bandana=1
         self.hair_bandana-=1
+        """
         #self.hair_bandana_colour = Stat(self.option_file,self,109-48, 2, 7, "bandana colour") + 1
         # Cap menu
         #self.cap = Stat(self.option_file, self, 98-48, 6, 1, "cap")
@@ -442,7 +453,7 @@ class Player:
         #self.sunglasses_colour = Stat(self.option_file,self,114-48, 0, 7, "Sun glasses colour") + 1
         
         # Physical settings
-        self.height = Stat(self.option_file, self, 41, 0, 63, "Height") + 148
+        self.height = Stat(self.option_file, self, 41, 0, 63, "Height")# + 148
         self.weight = Stat(self.option_file, self, 41, 8, 127, "Weight")
         """
         self.neck_length = Stat(self.option_file,self,105-48, 2, 15, "Neck Length") - 7
@@ -482,8 +493,9 @@ class Player:
     def get_names(self):
         #print(self.idx)
         name = "???"
+        shirt_name = "???"
         name_bytes_length = 32
-        player_offset = self.self.start_address + self.idx * 124
+        player_offset = self.start_address + self.idx * 124
         if self.idx>self.total_players:
             player_offset = self.start_address_edited + ((self.idx - self.first_edited_id) * 124)
         if (
@@ -491,7 +503,7 @@ class Player:
             and (self.idx <= self.total_players or self.idx >= self.first_edited_id)
             and self.idx < self.first_edited_id + self.total_edit
         ):
-            all_name_bytes = self.option_file[
+            all_name_bytes = self.option_file.data[
                 player_offset : player_offset + name_bytes_length
             ]
             try:
@@ -516,7 +528,7 @@ class Player:
                 name = f"{prefix} ({self.idx})"
             #get the shirt name
             shirt_name_address = player_offset + 32
-            name_byte_array = self.option_file[
+            name_byte_array = self.option_file.data[
                 shirt_name_address : shirt_name_address
                 + name_bytes_length // 2
             ]
