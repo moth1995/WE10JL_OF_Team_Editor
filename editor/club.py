@@ -81,7 +81,6 @@ class Club:
 
     def set_emblem(self):
         self.emblem = int.from_bytes(self.option_file.data[self.emblem_address : self.emblem_address + 4], byteorder='little')
-        print(self.emblem)
 
     def set_color1(self):
         self.color1 = rgb_to_hex([self.option_file.data[self.color1_address + i] for i in range(3)])
@@ -158,4 +157,3 @@ class Club:
         self.option_file.data[self.supp_c_edited_address] = 1
         self.supp_color_c1 = (new_supp_color >> 4)
         self.supp_color_c2 = (new_supp_color & 0xf)
-

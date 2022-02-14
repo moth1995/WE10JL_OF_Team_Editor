@@ -8,14 +8,14 @@ from PIL import Image
 
 from editor.option_file import OptionFile
 from editor.club import Club
-from editor.utils.common_functions import bytes_to_int, zero_fill_right_shift, to_int, to_byte, hex_to_rgb
+from editor.utils.common_functions import hex_to_rgb
 
 from swap_teams import swap_teams_data
-from player_data import get_stats, set_value, get_value, first_unused, first_edited_id, total_edit, national_teams, total_players
+from player_data import get_stats, first_unused, first_edited_id, total_edit, national_teams, total_players
 from export_csv import write_csv
 from import_csv import load_csv
 from of_crypt import of_encrypter, of_decrypter
-from teams import get_players_clubs, get_formation, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
+from teams import get_players_clubs, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
 import editor.shop as Shop
 import editor.stadiums as Stadiums
 import editor.leagues as Leagues
