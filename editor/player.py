@@ -16,7 +16,6 @@ class Player:
     def __init__(self,option_file, idx):
         self.idx = idx
         self.option_file = option_file
-        self.name = self.option_file.data[:32].decode('utf-16-le')
         self.name, self.shirt_name = self.get_names()
         self.callName = Stat(self.option_file, self, 1, 0, 65535, "Callname idx")
         self.nation = Stat(self.option_file, self, 65, 0, 127, "Nationality")
