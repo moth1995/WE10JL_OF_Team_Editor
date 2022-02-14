@@ -289,6 +289,8 @@ def update_teamlist():
     clubs_list_box.delete(0,END)
     clubs_list_box.insert(END,*club_teams_list)
 
+def show_thanks():
+    messagebox.showinfo(title=appname, message="Thanks to PeterC10 for python de/encrypt code for OF,\nYerry11 for png import/export, Aurelio José Parra Morales for players nationalities")
 
 appname='JL WE10 OF Team Editor'
 root = Tk()
@@ -368,9 +370,12 @@ if root.filename!="":
     my_menu=Menu(root)
     root.config(menu=my_menu)
     file_menu = Menu(my_menu, tearoff=0)
+    help_menu = Menu(my_menu, tearoff=0)
     my_menu.add_cascade(label="File", menu=file_menu)
     file_menu.add_command(label="Save", command=save_btn_action)
     file_menu.add_command(label="Exit", command=root.quit)
+    my_menu.add_cascade(label="Help", menu=help_menu)
+    help_menu.add_command(label="About...", command=show_thanks)
 
     tabs_container=ttk.Notebook(root)
     swap_teams_tab=Frame(tabs_container, width=w, height=h)
@@ -380,7 +385,7 @@ if root.filename!="":
     stadium_league_tab = Frame(tabs_container, width=w, height=h)
     shop_tab = Frame(tabs_container, width=w, height=h)
     copyright_lbl=Label(root, text="By PES Indie Team")
-    thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF")
+    #thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF,\nYerry11 for png import/export, Aurelio José Parra Morales for players nationalities")
 
     #Swap teams tab
     club_teams_list = [of.clubs[x].name for x in range(Club.total)]
@@ -501,7 +506,7 @@ if root.filename!="":
     swap_teams_btn.place(x=380, y=160)
     #save_changes_btn.place(x=376, y=200)
     copyright_lbl.place(x=0, y=570)
-    thanks_lbl.place(x=480, y=560)
+    #thanks_lbl.place(x=480, y=560)
 
     #CSV tab placing
 
