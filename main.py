@@ -3,7 +3,7 @@ from PIL import ImageTk
 from PIL import Image
 
 from editor.option_file import OptionFile
-from editor.utils.common_functions import hex_to_rgb
+from editor.utils.common_functions import hex_to_rgb, intTryParse
 
 from swap_teams import swap_teams_data
 from player_data import get_stats, first_unused, first_edited_id, total_edit, national_teams, total_players
@@ -131,13 +131,6 @@ def set_stadium_box():
     stadiums_box.delete(0,'end')
     stadiums_box.insert(0,stadiums_list_box.get(stadiums_list_box.curselection()))
 
-
-def intTryParse(value):
-    try:
-        return int(value)
-    except ValueError:
-        return value
-
 def shop_set_points():
     value = intTryParse(new_points_box.get())
     if isinstance(value, int):
@@ -161,8 +154,6 @@ def export_formation_btn_action():
     except OSError as err:
         #print("OS error: {0}".format(err))
         messagebox.showerror(title=appname,message="OS error: {0}".format(err))
-    except EnvironmentError as err: # parent of IOError, OSError *and* WindowsError where available
-        messagebox.showerror(title=appname,message="Error while creating file, please run as admin\nError: {0}".format(err))
 
 def import_formation_btn_action():
     try:
@@ -176,8 +167,6 @@ def import_formation_btn_action():
     except OSError as err:
         #print("OS error: {0}".format(err))
         messagebox.showerror(title=appname,message="OS error: {0}".format(err))
-    except EnvironmentError as err: # parent of IOError, OSError *and* WindowsError where available
-        messagebox.showerror(title=appname,message="Error while reading the file, please run as admin\nError: {0}".format(err))
 
 def decrypt_btn_action():
     root.temp_file = filedialog.asksaveasfile(initialdir=".",title="Create your decrypted OF", mode='wb', filetypes=(("Bin files","*.bin"),("All files", "*")), defaultextension=".bin")
