@@ -35,8 +35,7 @@ class OptionFile:
 
         self.set_clubs()
         self.set_logos()
-        self.set_players()
-        print(self.players[1].accel.get_value())
+        #self.set_players()
         self.set_leagues()
 
     def get_game_type(self, file_name):
