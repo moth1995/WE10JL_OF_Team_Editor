@@ -3,7 +3,8 @@ from PIL import ImageTk
 from PIL import Image
 
 from editor.option_file import OptionFile
-from editor.utils.common_functions import hex_to_rgb, intTryParse
+from editor.utils.common_functions import hex_to_rgb
+from gui.shop_tab import ShopTab
 
 from swap_teams import swap_teams_data
 from player_data import get_stats, first_unused, first_edited_id, total_edit, national_teams, total_players
@@ -126,22 +127,10 @@ def stadium_set_name():
     except ValueError as e:
         messagebox.showerror(title=appname,message=e)
 
-
 def set_stadium_box():
     stadiums_box.delete(0,'end')
     stadiums_box.insert(0,stadiums_list_box.get(stadiums_list_box.curselection()))
 
-def shop_set_points():
-    value = intTryParse(new_points_box.get())
-    if isinstance(value, int):
-        try:
-            of.shop.set_points(value)
-            points_lbl.config(text=f"Please enter a value between 0 and 99999 and press enter\nCurrent points {value}")
-            messagebox.showinfo(title=appname,message="Points set correctly")
-        except ValueError as e:
-            messagebox.showerror(title=appname,message=e)
-    else:
-        messagebox.showerror(title=appname,message="Please insert a number not a string")
 
 def export_formation_btn_action():
     try:
@@ -227,7 +216,6 @@ def import_all_from_csv():
             messagebox.showinfo(title=appname,message="CSV file imported")
         else:
             messagebox.showerror(title=appname,message="Error while importing CSV file")
-
 
 #this is a function to update the list in the combobox
 def swap_list_positions(teams_list, pos1, pos2): 
@@ -375,7 +363,8 @@ if root.filename!="":
     extra_tab=Frame(tabs_container, width=w, height=h)
     clubs_tab = Frame(tabs_container, width=w, height=h)
     stadium_league_tab = Frame(tabs_container, width=w, height=h)
-    shop_tab = Frame(tabs_container, width=w, height=h)
+    #shop_tab = Frame(tabs_container, width=w, height=h)
+    shop_tab = ShopTab(tabs_container,of, w, h)
     copyright_lbl=Label(root, text="By PES Indie Team")
     #thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF,\nYerry11 for png import/export, Aurelio José Parra Morales for players nationalities")
 
@@ -474,19 +463,6 @@ if root.filename!="":
 
 
     #Shop tab
-    points=of.shop.points
-    points_lbl = Label(shop_tab, text= f"Please enter a value between 0 and 99999 and press enter\nCurrent points {points}")
-    new_points_box = Entry(shop_tab, width=8)
-    new_points_box.bind('<Return>', lambda event: shop_set_points())
-    unlock_lock_lbl = Label(shop_tab, text= f"Unlock/Lock Shop Items")
-    unlock_shop_btn = Button(shop_tab, text="Unlock shop", command = lambda: messagebox.showinfo(title=appname,message=of.shop.unlock_shop()))
-    lock_shop_btn = Button(shop_tab, text="Lock shop", command = lambda: messagebox.showinfo(title=appname,message=of.shop.lock_shop()))
-    # Since we don't know the name of the background menu we generate some random names
-    bg_list = [f"Main Menu BG {i+1}" for i in range(63)]
-    bg_selector_lbl = Label(shop_tab, text= f"Main Menu Background Selector")
-    bg_selector_cmb = ttk.Combobox(shop_tab, state="readonly", value=bg_list, width=20)
-    bg_selector_cmb.current(of.shop.bg)
-    bg_selector_btn = Button(shop_tab,text="Set", command=lambda: messagebox.showinfo(title=appname,message=of.shop.set_background(bg_selector_cmb.current())))
     
     #Swap team tab placing
 
@@ -550,14 +526,7 @@ if root.filename!="":
 
     # Shop tab placing
 
-    points_lbl.place(x=220, y=20)
-    new_points_box.place(x = 320, y = 60)
-    unlock_lock_lbl.place(x = 280, y = 100)
-    unlock_shop_btn.place(x = 260, y = 130)
-    lock_shop_btn.place(x = 360, y = 130)
-    bg_selector_lbl.place(x = 280, y = 170)
-    bg_selector_cmb.place(x = 280, y = 200)
-    bg_selector_btn.place(x = 340, y = 230)
+    shop_tab.publish()
 
     #Placing tabs and container in the root
 
