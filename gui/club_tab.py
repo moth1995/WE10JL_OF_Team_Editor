@@ -39,7 +39,6 @@ class ClubTab(Frame):
         self.clubs_sup_c2_cmb.bind('<<ComboboxSelected>>', lambda event: self.update_color_supp("c2", self.clubs_sup_c2_cmb.current()))
         self.clubs_apply_btn = Button(self, text="Apply", command=lambda: self.update_club_val())
         self.clubs_discard_btn = Button(self, text="Discard", command=lambda: self.set_club_data())
-        master.bind('<Button-1>', lambda e: self.refresh_gui())
         
 
     def update_color_supp(self, color_order, color_index):

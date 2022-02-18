@@ -1,7 +1,7 @@
 from tkinter import messagebox, ttk, filedialog, Tk, Menu, Frame, Label, IntVar, Checkbutton, Button, Entry
 
 from editor.option_file import OptionFile
-from editor.teams import Teams
+
 from gui.club_tab import ClubTab
 from gui.shop_tab import ShopTab
 from gui.stadium_league_tab import StadiumLeagueTab
@@ -143,6 +143,13 @@ def refresh_gui():
 
 def show_thanks():
     messagebox.showinfo(title=appname, message="Thanks to PeterC10 for python de/encrypt code for OF,\nYerry11 for png import/export, Aurelio José Parra Morales for players nationalities")
+
+def on_tab_change(event):
+    tab = event.widget.tab('current')['text']
+    if tab == 'Clubs':
+        clubs_tab.refresh_gui()
+    elif tab == 'Swap Teams' or tab == 'Export/Import CSV' or tab == 'Extra':
+        refresh_gui()
 
 appname='JL WE10 OF Team Editor'
 root = Tk()
@@ -345,6 +352,9 @@ if root.filename!="":
     tabs_container.add(clubs_tab, text="Clubs")
     tabs_container.add(stadium_league_tab, text="Stadiums & Leagues")
     tabs_container.add(shop_tab, text="Shop")
+
+    tabs_container.bind('<<NotebookTabChanged>>', on_tab_change)
+
     root.resizable(False, False)
     root.mainloop()
 else:
