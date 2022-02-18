@@ -1,5 +1,4 @@
 from .stat import Stat
-from .nationalities import Nationalities
 
 class Player:
     start_address = 39608
