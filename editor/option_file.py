@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from enum import Enum, auto
 
+from editor.teams import Teams
+
 
 from .option_file_data import (
     OF_BYTE_LENGTH,
@@ -43,6 +45,7 @@ class OptionFile:
         self.set_leagues()
         self.set_stadiums()
         self.set_shop()
+        self.set_teams()
 
     def get_game_type(self, file_name):
         """
@@ -230,6 +233,12 @@ class OptionFile:
         Load Shop info and methods
         """
         self.shop = Shop(self)
+
+    def set_teams(self):
+        """
+        Load Teams info and methods
+        """
+        self.teams = Teams(self)
 
 class GameType(Enum):
     ps2_pes = auto()

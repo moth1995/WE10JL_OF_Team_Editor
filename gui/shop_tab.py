@@ -2,21 +2,22 @@ from tkinter import Button, Entry, Frame, Label, messagebox, ttk
 from editor.utils.common_functions import intTryParse
 
 class ShopTab(Frame):
-    def __init__(self, master, option_file, w, h):
+    def __init__(self, master, option_file, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
+        self.appname = appname
         self.points_lbl = Label(self, text= f"Please enter a value between 0 and 99999 and press enter\nCurrent points {self.of.shop.points}")
         self.new_points_box = Entry(self, width=8)
         self.new_points_box.bind('<Return>', lambda event: self.shop_set_points())
         self.unlock_lock_lbl = Label(self, text= f"Unlock/Lock Shop Items")
-        self.unlock_shop_btn = Button(self, text="Unlock shop", command = lambda: messagebox.showinfo(title="appname",message=self.of.shop.unlock_shop()))
-        self.lock_shop_btn = Button(self, text="Lock shop", command = lambda: messagebox.showinfo(title="appname",message=self.of.shop.lock_shop()))
+        self.unlock_shop_btn = Button(self, text="Unlock shop", command = lambda: messagebox.showinfo(title=self.appname,message=self.of.shop.unlock_shop()))
+        self.lock_shop_btn = Button(self, text="Lock shop", command = lambda: messagebox.showinfo(title=self.appname,message=self.of.shop.lock_shop()))
         # Since we don't know the name of the background menu we generate some random names
         self.bg_list = [f"Main Menu BG {i+1}" for i in range(63)]
         self.bg_selector_lbl = Label(self, text= f"Main Menu Background Selector")
         self.bg_selector_cmb = ttk.Combobox(self, state="readonly", value=self.bg_list, width=20)
         self.bg_selector_cmb.current(self.of.shop.bg)
-        self.bg_selector_btn = Button(self,text="Set", command=lambda: messagebox.showinfo(title="appname",message=self.of.shop.set_background(self.bg_selector_cmb.current())))
+        self.bg_selector_btn = Button(self,text="Set", command=lambda: messagebox.showinfo(title=self.appname,message=self.of.shop.set_background(self.bg_selector_cmb.current())))
 
     def shop_set_points(self):
         value = intTryParse(self.new_points_box.get())
@@ -24,11 +25,11 @@ class ShopTab(Frame):
             try:
                 self.of.shop.set_points(value)
                 self.points_lbl.config(text=f"Please enter a value between 0 and 99999 and press enter\nCurrent points {value}")
-                messagebox.showinfo(title="",message="Points set correctly")
+                messagebox.showinfo(title=self.appname,message="Points set correctly")
             except ValueError as e:
-                messagebox.showerror(title="appname",message=e)
+                messagebox.showerror(title=self.appname,message=e)
         else:
-            messagebox.showerror(title="appname",message="Please insert a number not a string")
+            messagebox.showerror(title=self.appname,message="Please insert a number not a string")
 
     def publish(self):
         self.points_lbl.place(x=220, y=20)
