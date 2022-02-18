@@ -16,6 +16,7 @@ from .player import Player
 from .leagues import League
 from .stadiums import Stadium
 from .shop import Shop
+
 from .utils.common_functions import bytes_to_int, zero_fill_right_shift
 
 
@@ -93,10 +94,10 @@ class OptionFile:
 
         of_file = open(file_location, "wb")
 
-        if self.extension == "psu":
+        if self.extension == ".psu":
             of_file.write(self.header_data)
             of_file.write(self.data)
-        elif self.extension == "xps":
+        elif self.extension == ".xps":
             of_file.write(self.header_data)
             of_file.write(self.data)
             of_file.write(bytearray(4))

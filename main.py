@@ -261,9 +261,20 @@ def swap_btn_action():
 def save_btn_action():
     try:
         of.save_option_file()
-        messagebox.showinfo(title=appname,message="All changes saved")
+        messagebox.showinfo(title=appname,message=f"All changes saved at {of.file_location}")
     except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
         messagebox.showerror(title=appname,message=f"Error while saving, error type={e}, try running as admin")
+
+def save_as_btn_action():
+    try:
+        save_as = filedialog.asksaveasfile(initialdir=".",title=appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=of.extension)
+        if save_as is None:
+            return
+        of.save_option_file(save_as.name)
+        messagebox.showinfo(title=appname,message=f"All changes saved at {of.file_location}")
+    except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
+        messagebox.showerror(title=appname,message=f"Error while saving, error type={e}, try running as admin")
+
 
 def update_teamlist():
     """
@@ -299,7 +310,7 @@ y = (hs/2) - (h/2)
 root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 #Once it start it will ask to select the option file
 root.filename=""
-root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("JL WE10 PS2 Option File", ".psu .xps"),]))
+root.filename = filedialog.askopenfilename(initialdir=".",title="Select your option file", filetypes=([("JL WE10 PS2 Option File", ".psu .xps"), ("All files", "*")]))
 if root.filename!="":
     isencrypted = messagebox.askyesno(title=appname, message="Is your option file encrypted?")
     of = OptionFile(root.filename,isencrypted)
@@ -364,6 +375,7 @@ if root.filename!="":
     help_menu = Menu(my_menu, tearoff=0)
     my_menu.add_cascade(label="File", menu=file_menu)
     file_menu.add_command(label="Save", command=save_btn_action)
+    file_menu.add_command(label="Save as", command=save_as_btn_action)
     file_menu.add_command(label="Exit", command=root.quit)
     my_menu.add_cascade(label="Help", menu=help_menu)
     help_menu.add_command(label="About...", command=show_thanks)
