@@ -12,7 +12,6 @@ from import_csv import load_csv
 from of_crypt import of_encrypter, of_decrypter
 from teams import get_players_clubs, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
 import editor.shop as Shop
-import editor.stadiums as Stadiums
 
 
 def update_color_supp(color_order, color_index):
@@ -117,12 +116,11 @@ def stadium_set_name():
     try:
         std_new_name = stadiums_box.get()
         stadium_id = stadiums_list_box.get(0, "end").index(stadiums_list_box.get(stadiums_list_box.curselection()))
-        Stadiums.set_name(of.data, stadium_id, std_new_name)
-        
+        of.stadiums[stadium_id].set_name(std_new_name)
         stadiums_list_box.delete(0,'end')
-        stadiums_list_box.insert('end',*Stadiums.get_stadium_list(of.data))
+        stadiums_list_box.insert('end',*[stadium.name for stadium in of.stadiums])
 
-        clubs_stad_cmb['value'] = Stadiums.get_stadium_list(of.data)
+        clubs_stad_cmb['value'] = [stadium.name for stadium in of.stadiums]
 
         
         messagebox.showinfo(title=appname,message="Stadium name changed correctly")
@@ -432,7 +430,7 @@ if root.filename!="":
     clubs_box = Entry(clubs_tab, width=30)
     clubs_abbr_box = Entry(clubs_tab, width=15)
     clubs_stad_lbl = Label(clubs_tab,text="Home stadium")
-    clubs_stad_cmb = ttk.Combobox(clubs_tab, state="readonly", value=Stadiums.get_stadium_list(of.data), width=30)
+    clubs_stad_cmb = ttk.Combobox(clubs_tab, state="readonly", value=[stadium.name for stadium in of.stadiums], width=30)
     clubs_flag_lbl = Label(clubs_tab,text="Flag")
     clubs_flag_img_lbl = Label(clubs_tab,borderwidth=2, relief="solid")
     clubs_flag_cmb = ttk.Combobox(clubs_tab, state="readonly", value=[f"Flag Background {i}" for i in range(12)], width=30)
@@ -463,7 +461,7 @@ if root.filename!="":
     stadiums_list_box = Listbox(stadium_league_tab, height = 30, width = 30, exportselection=False)
     stadiums_list_box.selectedindex = 0
     stadiums_list_box.bind('<<ListboxSelect>>',lambda event: set_stadium_box())
-    stadiums_list_box.insert('end',*Stadiums.get_stadium_list(of.data))
+    stadiums_list_box.insert('end',*[stadium.name for stadium in of.stadiums])
 
     leagues_lbl = Label(stadium_league_tab, text="Insert the new league name")
     leagues_box = Entry(stadium_league_tab, width=30)
