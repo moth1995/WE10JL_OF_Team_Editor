@@ -27,7 +27,7 @@ class League:
             league_name_bytes[: len(new_name_bytes)] = new_name_bytes
             for i, byte in enumerate(league_name_bytes):
                 self.of.data[self.offset + self.BASE_NAME_LEN + 1 + i] = byte
-            self.name = new_name
+            self.get_name()
             return "League name changed!"
         else:
             raise ValueError("League name can't be empty or bigger than 60 characters")

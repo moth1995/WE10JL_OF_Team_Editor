@@ -27,7 +27,7 @@ class Stadium:
             for i, byte in enumerate(stadium_name_bytes):
                 self.of.data[self.offset + i] = byte
             self.of.data[self.SW_ADDR+self.idx] = 1
-            self.name = new_name
+            self.get_name()
             return "Stadium name changed!"
         else:
             raise ValueError("Stadium name can't be empty or bigger than 60 characters")

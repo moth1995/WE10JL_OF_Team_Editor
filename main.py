@@ -11,7 +11,6 @@ from export_csv import write_csv
 from import_csv import load_csv
 from of_crypt import of_encrypter, of_decrypter
 from teams import get_players_clubs, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
-import editor.shop as Shop
 
 
 def update_color_supp(color_order, color_index):
@@ -143,7 +142,7 @@ def shop_set_points():
     value = intTryParse(new_points_box.get())
     if isinstance(value, int):
         try:
-            Shop.set_points(value,of.data)
+            of.shop.set_points(value)
             points_lbl.config(text=f"Please enter a value between 0 and 99999 and press enter\nCurrent points {value}")
             messagebox.showinfo(title=appname,message="Points set correctly")
         except ValueError as e:
@@ -474,19 +473,19 @@ if root.filename!="":
 
 
     #Shop tab
-    points=Shop.get_points(of.data)
+    points=of.shop.points
     points_lbl = Label(shop_tab, text= f"Please enter a value between 0 and 99999 and press enter\nCurrent points {points}")
     new_points_box = Entry(shop_tab, width=8)
     new_points_box.bind('<Return>', lambda event: shop_set_points())
     unlock_lock_lbl = Label(shop_tab, text= f"Unlock/Lock Shop Items")
-    unlock_shop_btn = Button(shop_tab, text="Unlock shop", command = lambda: messagebox.showinfo(title=appname,message=Shop.unlock_shop(of.data)))
-    lock_shop_btn = Button(shop_tab, text="Lock shop", command = lambda: messagebox.showinfo(title=appname,message=Shop.lock_shop(of.data)))
+    unlock_shop_btn = Button(shop_tab, text="Unlock shop", command = lambda: messagebox.showinfo(title=appname,message=of.shop.unlock_shop()))
+    lock_shop_btn = Button(shop_tab, text="Lock shop", command = lambda: messagebox.showinfo(title=appname,message=of.shop.lock_shop()))
     # Since we don't know the name of the background menu we generate some random names
     bg_list = [f"Main Menu BG {i+1}" for i in range(63)]
     bg_selector_lbl = Label(shop_tab, text= f"Main Menu Background Selector")
     bg_selector_cmb = ttk.Combobox(shop_tab, state="readonly", value=bg_list, width=20)
-    bg_selector_cmb.current(Shop.get_background(of.data))
-    bg_selector_btn = Button(shop_tab,text="Set", command=lambda: messagebox.showinfo(title=appname,message=Shop.set_background(of.data,bg_selector_cmb.current())))
+    bg_selector_cmb.current(of.shop.bg)
+    bg_selector_btn = Button(shop_tab,text="Set", command=lambda: messagebox.showinfo(title=appname,message=of.shop.set_background(bg_selector_cmb.current())))
     
     #Swap team tab placing
 
