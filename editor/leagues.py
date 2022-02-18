@@ -19,9 +19,6 @@ class League:
     def get_name(self):
         self.name = self.of.data[self.offset + self.BASE_NAME_LEN + 1: self.offset + self.BASE_NAME_LEN + 1 + self.MAX_LEN].partition(b"\0")[0].decode('utf-8',"ignore")
 
-    def get_leagues_list(self):
-        return [self.get_name(self.of,i) for i in range(self.TOTAL)]
-
     def set_name(self, new_name):
         if 0 < len(new_name) < self.MAX_LEN:
             new_name = new_name[: self.MAX_LEN]
