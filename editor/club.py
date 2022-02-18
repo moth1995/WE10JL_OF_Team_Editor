@@ -107,7 +107,7 @@ class Club:
         for i, byte in enumerate(club_name_bytes):
             self.option_file.data[self.name_address + i] = byte
         self.option_file.data[self.name_edited_addr] = 1
-        self.name = new_name
+        self.set_name()
 
     def update_abbr(self, abbr):
         """
@@ -122,16 +122,16 @@ class Club:
         for i, byte in enumerate(club_abbr_bytes):
             self.option_file.data[self.abbr_address + i] = byte
 
-        self.abbr = new_abbr
+        self.set_abbr()
 
     def update_stadium(self, new_stadium):
         self.option_file.data[self.stadium_address] = new_stadium
         self.option_file.data[self.stadium_edited] = 1
-        self.stadium = new_stadium
+        self.set_stadium()
 
     def update_flag(self, new_flag_style):
         self.option_file.data[self.flag_address] = new_flag_style
-        self.flag_style = new_flag_style
+        self.set_flag
 
     def update_emblem(self, new_emblem):
         self.option_file.data[self.emblem_address] = new_emblem.to_bytes(4,"little")
@@ -139,21 +139,20 @@ class Club:
         # Flag to say that we edited this emblem
         self.option_file.data[self.emblem_edited_addr] = 1
         self.option_file.data[self.emblem_edited_addr + 1] = 1
-        self.emblem = new_emblem
+        self.set_emblem()
 
     def update_color1(self,new_c1):
         for i in range(len(new_c1)):
             self.option_file.data[self.color1_address + i] = new_c1[i]
-        self.color1 = rgb_to_hex(new_c1)
+        self.set_color1()
 
     def update_color2(self,new_c2):
         for i in range(len(new_c2)):
             self.option_file.data[self.color2_address + i] = new_c2[i]
-        self.color2 = rgb_to_hex(new_c2)
+        self.set_color2()
 
     def update_supp_color(self, new_supp_c1, new_supp_c2):
         new_supp_color = (new_supp_c2 <<4) | new_supp_c1
         self.option_file.data[self.supp_color_address] = new_supp_color
         self.option_file.data[self.supp_c_edited_address] = 1
-        self.supp_color_c1 = (new_supp_color >> 4)
-        self.supp_color_c2 = (new_supp_color & 0xf)
+        self.set_supp_color()
