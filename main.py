@@ -1,13 +1,8 @@
-from tkinter import *
-from tkinter import messagebox
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import colorchooser
+from tkinter import messagebox, ttk, filedialog, colorchooser, Tk, Menu, Frame, Label, IntVar, Checkbutton, Button, Entry, Listbox
 from PIL import ImageTk
 from PIL import Image
 
 from editor.option_file import OptionFile
-from editor.club import Club
 from editor.utils.common_functions import hex_to_rgb
 
 from swap_teams import swap_teams_data
@@ -18,7 +13,6 @@ from of_crypt import of_encrypter, of_decrypter
 from teams import get_players_clubs, get_formation_generic, set_formation_generic, first_club_team_id, last_club_team_id
 import editor.shop as Shop
 import editor.stadiums as Stadiums
-import editor.leagues as Leagues
 
 
 def update_color_supp(color_order, color_index):
@@ -78,10 +72,10 @@ def update_flag_lbl():
 def set_club_data():
     # set the name to the entry box
     club_id = clubs_list_box.get(0, "end").index(clubs_list_box.get(clubs_list_box.curselection()))
-    clubs_box.delete(0,END)
+    clubs_box.delete(0,'end')
     clubs_box.insert(0,clubs_list_box.get(clubs_list_box.curselection()))
     # set the abbr name to the entry box
-    clubs_abbr_box.delete(0,END)
+    clubs_abbr_box.delete(0,'end')
     clubs_abbr_box.insert(0,of.clubs[club_id].abbr)
     # set the stadium
     clubs_stad_cmb.current(of.clubs[club_id].stadium)
@@ -104,10 +98,10 @@ def league_set_name():
     try:
         lg_new_name = leagues_box.get()
         league_id = leagues_list_box.get(0, "end").index(leagues_list_box.get(leagues_list_box.curselection()))
-        Leagues.set_name(of.data, league_id, lg_new_name)
+        of.leagues[league_id].set_name(lg_new_name)
         
         leagues_list_box.delete(0,'end')
-        leagues_list_box.insert(END,*Leagues.get_leagues_list(of.data))
+        leagues_list_box.insert('end',*[league.name for league in of.leagues])
         
         messagebox.showinfo(title=appname,message="League name changed correctly")
     except ValueError as e:
@@ -115,7 +109,7 @@ def league_set_name():
 
 
 def set_leagues_box():
-    leagues_box.delete(0,END)
+    leagues_box.delete(0,'end')
     leagues_box.insert(0,leagues_list_box.get(leagues_list_box.curselection()))
 
 
@@ -126,7 +120,7 @@ def stadium_set_name():
         Stadiums.set_name(of.data, stadium_id, std_new_name)
         
         stadiums_list_box.delete(0,'end')
-        stadiums_list_box.insert(END,*Stadiums.get_stadium_list(of.data))
+        stadiums_list_box.insert('end',*Stadiums.get_stadium_list(of.data))
 
         clubs_stad_cmb['value'] = Stadiums.get_stadium_list(of.data)
 
@@ -137,7 +131,7 @@ def stadium_set_name():
 
 
 def set_stadium_box():
-    stadiums_box.delete(0,END)
+    stadiums_box.delete(0,'end')
     stadiums_box.insert(0,stadiums_list_box.get(stadiums_list_box.curselection()))
 
 
@@ -278,7 +272,7 @@ def update_teamlist():
     """
     Updates every gui element that use the teamlist 
     """
-    club_teams_list = [of.clubs[x].name for x in range(Club.total)]
+    club_teams_list = [club.name for club in of.clubs]
     teams_list=national_teams + club_teams_list
     csv_team_list = ["---ALL PLAYERS---"] + teams_list
     csv_team_cmb['value'] = csv_team_list
@@ -286,8 +280,8 @@ def update_teamlist():
     team_b_cmb['value'] = teams_list
     teamform_cmb['value'] = teams_list
     teamform_cmb.current(0)
-    clubs_list_box.delete(0,END)
-    clubs_list_box.insert(END,*club_teams_list)
+    clubs_list_box.delete(0,'end')
+    clubs_list_box.insert('end',*club_teams_list)
 
 def show_thanks():
     messagebox.showinfo(title=appname, message="Thanks to PeterC10 for python de/encrypt code for OF,\nYerry11 for png import/export, Aurelio José Parra Morales for players nationalities")
@@ -388,7 +382,7 @@ if root.filename!="":
     #thanks_lbl=Label(root, text="Thanks to PeterC10 for python de/encrypt code for OF,\nYerry11 for png import/export, Aurelio José Parra Morales for players nationalities")
 
     #Swap teams tab
-    club_teams_list = [of.clubs[x].name for x in range(Club.total)]
+    club_teams_list = [club.name for club in of.clubs]
     teams_list=national_teams + club_teams_list
     csv_team_list = ["---ALL PLAYERS---"] + teams_list
 
@@ -431,8 +425,8 @@ if root.filename!="":
     clubs_list_box = Listbox(clubs_tab, height = 30, width = 30, exportselection=False)
     clubs_list_box.selectedindex = 0
     clubs_list_box.bind('<<ListboxSelect>>',lambda event: set_club_data())
-    clubs_list_box.delete(0,END)
-    clubs_list_box.insert(END,*club_teams_list)
+    clubs_list_box.delete(0,'end')
+    clubs_list_box.insert('end',*club_teams_list)
 
     clubs_name_lbl = Label(clubs_tab,text="Team name")
     clubs_box = Entry(clubs_tab, width=30)
@@ -469,7 +463,7 @@ if root.filename!="":
     stadiums_list_box = Listbox(stadium_league_tab, height = 30, width = 30, exportselection=False)
     stadiums_list_box.selectedindex = 0
     stadiums_list_box.bind('<<ListboxSelect>>',lambda event: set_stadium_box())
-    stadiums_list_box.insert(END,*Stadiums.get_stadium_list(of.data))
+    stadiums_list_box.insert('end',*Stadiums.get_stadium_list(of.data))
 
     leagues_lbl = Label(stadium_league_tab, text="Insert the new league name")
     leagues_box = Entry(stadium_league_tab, width=30)
@@ -477,7 +471,7 @@ if root.filename!="":
     leagues_list_box = Listbox(stadium_league_tab, height = 30, width = 30, exportselection=False)
     leagues_list_box.selectedindex = 0
     leagues_list_box.bind('<<ListboxSelect>>',lambda event: set_leagues_box())
-    leagues_list_box.insert(END,*Leagues.get_leagues_list(of.data))
+    leagues_list_box.insert('end',*[league.name for league in of.leagues])
 
 
 

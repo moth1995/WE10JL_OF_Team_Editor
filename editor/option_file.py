@@ -12,7 +12,7 @@ from .option_file_data import (
 from .club import Club
 from .logo import Logo
 from .player import Player
-
+from .leagues import League
 from .utils.common_functions import bytes_to_int, zero_fill_right_shift
 
 
@@ -36,6 +36,8 @@ class OptionFile:
         self.set_clubs()
         self.set_logos()
         self.set_players()
+        print(self.players[1].accel.get_value())
+        self.set_leagues()
 
     def get_game_type(self, file_name):
         """
@@ -205,6 +207,12 @@ class OptionFile:
         Load all edited players from OF data and add to edited players list.
         """
         self.edited_players = [Player(self, i) for i in range(Player.first_edited_id, Player.total_edit)]
+
+    def set_leagues(self):
+        """
+        Load all leagues from OF data and add to leagues list.
+        """
+        self.leagues = [League(self, i) for i in range(League.TOTAL)]
 
 class GameType(Enum):
     ps2_pes = auto()
