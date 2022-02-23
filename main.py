@@ -1,11 +1,8 @@
 from tkinter import messagebox, ttk, filedialog, Tk, Menu, Frame, Label, IntVar, Checkbutton, Button, Entry
 
-from editor.option_file import OptionFile
+from editor import OptionFile
 
-from gui.club_tab import ClubTab
-from gui.logos_tab import LogosTab
-from gui.shop_tab import ShopTab
-from gui.stadium_league_tab import StadiumLeagueTab
+from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab
 
 from swap_teams import swap_teams_data
 from player_data import get_stats, first_unused, first_edited_id, total_edit, total_players
