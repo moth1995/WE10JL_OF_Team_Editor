@@ -1,5 +1,5 @@
 class Logo:
-    start_address = 860128
+    start_address = 788972
     total = 80
     header_size = 32
     size = 608
@@ -12,6 +12,9 @@ class Logo:
         self.option_file = option_file
         self.idx = idx
         self.set_addresses()
+        self.set_logo()
+        self.set_pes_palette()
+        self.set_pes_idat()
 
     def set_addresses(self):
         """
@@ -26,8 +29,8 @@ class Logo:
         """
         Generates a bytearray with the logo data
         """
-        self.header = self.option_file[self.header_address : self.header_address + self.header_size]
-        self.logo = self.option_file[self.logo_address : self.header_address + self.size]
+        self.header = self.option_file.data[self.header_address : self.header_address + self.header_size]
+        self.logo = self.option_file.data[self.logo_address : self.header_address + self.size]
 
     def set_pes_palette(self):
         """

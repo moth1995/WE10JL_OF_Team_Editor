@@ -3,6 +3,7 @@ from tkinter import messagebox, ttk, filedialog, Tk, Menu, Frame, Label, IntVar,
 from editor.option_file import OptionFile
 
 from gui.club_tab import ClubTab
+from gui.logos_tab import LogosTab
 from gui.shop_tab import ShopTab
 from gui.stadium_league_tab import StadiumLeagueTab
 
@@ -246,6 +247,7 @@ if root.filename!="":
     clubs_tab = ClubTab(tabs_container,of, w, h, appname)
     #stadium_league_tab = Frame(tabs_container, width=w, height=h)
     stadium_league_tab = StadiumLeagueTab(tabs_container,of, w, h, appname)
+    logos_tab = LogosTab(tabs_container,of, w, h, appname)
     #shop_tab = Frame(tabs_container, width=w, height=h)
     shop_tab = ShopTab(tabs_container,of, w, h, appname)
     copyright_lbl=Label(root, text="By PES Indie Team")
@@ -350,10 +352,10 @@ if root.filename!="":
     tabs_container.add(extra_tab, text="Extra")
     tabs_container.add(clubs_tab, text="Clubs")
     tabs_container.add(stadium_league_tab, text="Stadiums & Leagues")
+    tabs_container.add(logos_tab, text="Logos")
     tabs_container.add(shop_tab, text="Shop")
 
     tabs_container.bind('<<NotebookTabChanged>>', on_tab_change)
-
     root.resizable(False, False)
     root.mainloop()
 else:

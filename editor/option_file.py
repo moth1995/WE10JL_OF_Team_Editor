@@ -2,9 +2,6 @@ import os
 from pathlib import Path
 from enum import Enum, auto
 
-from editor.teams import Teams
-
-
 from .option_file_data import (
     OF_BYTE_LENGTH,
     OF_BLOCK,
@@ -18,6 +15,8 @@ from .player import Player
 from .leagues import League
 from .stadiums import Stadium
 from .shop import Shop
+from .teams import Teams
+from .images import PNG
 
 from .utils.common_functions import bytes_to_int, zero_fill_right_shift
 
@@ -208,9 +207,15 @@ class OptionFile:
         Load all logos from OF data and add to logos list.
         """
         self.logos = []
+        self.logos_png = []
+        self.logos_tk = []
         for i in range(Logo.total):
             logo = Logo(self, i)
             self.logos.append(logo)
+            png = PNG(logo)
+            self.logos_png.append(png)
+            img_tk = png.png_bytes_to_tk_img()
+            self.logos_tk.append(img_tk)
 
     def set_players(self):
         """
