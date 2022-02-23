@@ -115,8 +115,9 @@ dmypy.json
 
 #custom
 COFPES_OF_Editor/
-.psu
-.xps
-.max
+*.psu
+*.xps
+*.max
 BISLPM-66595JWEXOPT
-.bin
+*.bin
+test/
