@@ -108,6 +108,7 @@ class Club:
             self.option_file.data[self.name_address + i] = byte
         self.option_file.data[self.name_edited_addr] = 1
         self.set_name()
+        self.option_file.set_clubs_names()
 
     def update_abbr(self, abbr):
         """

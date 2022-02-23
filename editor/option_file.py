@@ -40,12 +40,17 @@ class OptionFile:
         self.read_option_file()
 
         self.set_clubs()
+        self.set_clubs_names()
         self.set_logos()
-        #self.set_players()
+        self.set_players()
+        self.set_edited_players()
         self.set_leagues()
+        self.set_leagues_names()
         self.set_stadiums()
+        self.set_stadiums_names()
         self.set_shop()
         self.set_teams()
+
 
     def get_game_type(self, file_name):
         """
@@ -195,6 +200,9 @@ class OptionFile:
             club = Club(self, i)
             self.clubs.append(club)
 
+    def set_clubs_names(self):
+        self.clubs_names = [club.name for club in self.clubs]
+
     def set_logos(self):
         """
         Load all logos from OF data and add to logos list.
@@ -210,11 +218,18 @@ class OptionFile:
         """
         self.players = [Player(self, i) for i in range(Player.total_players)]
 
+    def set_players_names(self):
+        self.players_names = [player.name for player in self.players]
+
     def set_edited_players(self):
         """
         Load all edited players from OF data and add to edited players list.
         """
         self.edited_players = [Player(self, i) for i in range(Player.first_edited_id, Player.total_edit)]
+
+    def set_edited_players_names(self):
+        self.edited_players_names = [edited_player.name for edited_player in self.edited_players]
+
 
     def set_leagues(self):
         """
@@ -222,11 +237,17 @@ class OptionFile:
         """
         self.leagues = [League(self, i) for i in range(League.TOTAL)]
 
+    def set_leagues_names(self):
+        self.leagues_names = [league.name for league in self.leagues]
+
     def set_stadiums(self):
         """
         Load all leagues from OF data and add to leagues list.
         """
         self.stadiums = [Stadium(self, i) for i in range(Stadium.TOTAL)]
+
+    def set_stadiums_names(self):
+        self.stadiums_names = [stadium.name for stadium in self.stadiums]
 
     def set_shop(self):
         """

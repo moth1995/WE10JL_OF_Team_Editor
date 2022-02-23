@@ -7,7 +7,7 @@ from gui.shop_tab import ShopTab
 from gui.stadium_league_tab import StadiumLeagueTab
 
 from swap_teams import swap_teams_data
-from player_data import get_stats, first_unused, first_edited_id, total_edit, national_teams, total_players
+from player_data import get_stats, first_unused, first_edited_id, total_edit, total_players
 from export_csv import write_csv
 from import_csv import load_csv
 from of_crypt import of_encrypter, of_decrypter
@@ -240,7 +240,7 @@ if root.filename!="":
     tabs_container=ttk.Notebook(root)
     swap_teams_tab=Frame(tabs_container, width=w, height=h)
     csv_tab=Frame(tabs_container, width=w, height=h)
-    tabs_container.bind('<Button-1>', lambda e: refresh_gui())
+    #tabs_container.bind('<Button-1>', lambda e: refresh_gui())
     extra_tab=Frame(tabs_container, width=w, height=h)
     #clubs_tab = Frame(tabs_container, width=w, height=h)
     clubs_tab = ClubTab(tabs_container,of, w, h, appname)
@@ -267,7 +267,6 @@ if root.filename!="":
 
     csv_team_cmb = ttk.Combobox(csv_tab, state="readonly", value=of.teams.csv_team_list, width=30)
     csv_team_cmb.current(0)
-    csv_team_cmb.bind('<Button-1>', lambda e: refresh_gui())
     extra_players_check = IntVar()
     extra_players_check.set(1)
     extra_players = Checkbutton(csv_tab, text="Include Unused and Edited players", variable=extra_players_check)

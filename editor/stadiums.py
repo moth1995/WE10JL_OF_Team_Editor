@@ -28,6 +28,7 @@ class Stadium:
                 self.of.data[self.offset + i] = byte
             self.of.data[self.SW_ADDR+self.idx] = 1
             self.get_name()
+            self.of.set_stadiums_names()
             return "Stadium name changed!"
         else:
             raise ValueError("Stadium name can't be empty or bigger than 60 characters")

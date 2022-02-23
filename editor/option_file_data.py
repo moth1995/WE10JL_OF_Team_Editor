@@ -12,6 +12,7 @@ OF_BLOCK = [
     837624, # ???? not sure but possible emblems
     1097000, # ??? full of zero i dont know for what it is use
 ]
+
 OF_BLOCK_SIZE = [
     4868,
     1268,
@@ -24,7 +25,6 @@ OF_BLOCK_SIZE = [
     259364,
     19144,
 ]
-
 
 OF_KEY = [
     2058578050,

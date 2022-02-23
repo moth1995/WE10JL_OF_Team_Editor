@@ -11,13 +11,13 @@ class ClubTab(Frame):
         self.clubs_list_box.selectedindex = 0
         self.clubs_list_box.bind('<<ListboxSelect>>',lambda event: self.set_club_data())
         self.clubs_list_box.delete(0,'end')
-        self.clubs_list_box.insert('end',*self.of.teams.club_teams_list)
+        self.clubs_list_box.insert('end',*self.of.clubs_names)
 
         self.clubs_name_lbl = Label(self,text="Team name")
         self.clubs_box = Entry(self, width=30)
         self.clubs_abbr_box = Entry(self, width=15)
         self.clubs_stad_lbl = Label(self,text="Home stadium")
-        self.clubs_stad_cmb = ttk.Combobox(self, state="readonly", value=[stadium.name for stadium in self.of.stadiums], width=30)
+        self.clubs_stad_cmb = ttk.Combobox(self, state="readonly", value=self.of.stadiums_names, width=30)
         self.clubs_flag_lbl = Label(self,text="Flag")
         self.clubs_flag_img_lbl = Label(self,borderwidth=2, relief="solid")
         self.clubs_flag_cmb = ttk.Combobox(self, state="readonly", value=[f"Flag Background {i}" for i in range(12)], width=30)
@@ -120,11 +120,11 @@ class ClubTab(Frame):
         """
         Updates every gui element that use the teamlist 
         """
-        self.of.teams.club_teams_list = [club.name for club in self.of.clubs]
+        self.of.teams.club_teams_list = self.of.clubs_names
         self.of.teams.teams_list=self.of.teams.national_teams + self.of.teams.club_teams_list
         self.clubs_list_box.delete(0,'end')
-        self.clubs_list_box.insert('end',*self.of.teams.club_teams_list)
-        self.clubs_stad_cmb['value'] = [stadium.name for stadium in self.of.stadiums]
+        self.clubs_list_box.insert('end',*self.of.clubs_names)
+        self.clubs_stad_cmb['value'] = self.of.stadiums_names
 
     def publish(self):
         self.clubs_list_box.place(x=5, y=20)
