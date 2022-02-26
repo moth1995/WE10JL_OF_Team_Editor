@@ -1,5 +1,6 @@
 import io
 from PIL import Image, ImageTk
+import io
 import zlib
 
 class PNG:
@@ -23,6 +24,9 @@ class PNG:
         Returns a PNG image from a pes image
         """
         IHDR_DATA = bytearray(self.pes_img.dimension.to_bytes(4, byteorder='big', signed=False)) +  bytearray(self.pes_img.dimension.to_bytes(4, byteorder='big', signed=False)) + bytearray([self.pes_img.bpp, 3, 0, 0, 0])
+        IHDR_DATA = (bytearray(self.pes_img.width.to_bytes(4, byteorder='big', signed=False)) 
+        +  bytearray(self.pes_img.height.to_bytes(4, byteorder='big', signed=False)) 
+        + bytearray([self.pes_img.bpp, 3, 0, 0, 0]))
         ihdr_crc32 = bytearray(zlib.crc32(self.IHDR + IHDR_DATA).to_bytes(4, byteorder='big', signed=False))
         ihdr_chunk = self.IHDR_LENGTH + self.IHDR + IHDR_DATA + ihdr_crc32
         palette_data = self.pes_palette_to_RGB()
@@ -42,7 +46,6 @@ class PNG:
     def png_bytes_to_tk_img(self):
         return ImageTk.PhotoImage(Image.open(io.BytesIO(self.png)).convert("RGBA"))
 
-
     def pes_palette_to_RGB(self):
         palette_data = bytearray()
         for j in range(0, len(self.pes_img.pes_palette), 4):
@@ -56,7 +59,71 @@ class PNG:
         return trns_data
 
     def pes_px_to_idat(self):
+        step = self.pes_img.width
+        if step == 32:
+            step = int(step / 2)
         idat_uncompress = bytearray()
         for j in range(0, len(self.pes_img.pes_idat), self.pes_img.palette_size):
             idat_uncompress += b'\x00' + self.pes_img.pes_idat[j : j + self.pes_img.palette_size]
+        for j in range(0, len(self.pes_img.pes_idat), step):
+            idat_uncompress += bytearray(1) + self.pes_img.pes_idat[j : j + step]
         return bytearray(zlib.compress(idat_uncompress))
+
+class PESImg:
+    def __init__(self, png:bytearray):
+        self.png = png
+        self.pes_palette = bytearray()
+        self.pes_idat = bytearray()
+        if not self.png[ : 8] == PNG.PNG_SIGNATURE:
+            raise TypeError("Not a PNG image")
+        ihdr_start = self.png.find(PNG.IHDR) # we need to move 4 bytes from the identifier
+        if ihdr_start == -1:
+            raise TypeError("Not a valid PNG image")
+        ihdr_start+=4
+        ihdr_lenght = int.from_bytes(self.png[ihdr_start - 8 : ihdr_start - 4],'big', signed=False)
+        ihdr = self.png[ihdr_start : ihdr_start + ihdr_lenght]
+        self.width = int.from_bytes(ihdr[:4],'big',signed=False)
+        self.height = int.from_bytes(ihdr[4:8],'big',signed=False)
+
+        self.bpp = ihdr[8]
+        self.palette_size = 1 << self.bpp
+        self.palette_pes_size = self.bpp * self.palette_size
+
+        color_type = ihdr[9]
+        if color_type != 3:
+            raise TypeError("Image is not indexed")
+
+        plte_start = self.png.find(PNG.PLTE) # we need to move 4 bytes from the identifier
+        if plte_start == -1:
+            raise TypeError("Not a valid PNG image")
+        plte_start+=4
+        plte_lenght = int.from_bytes(self.png[plte_start - 8 : plte_start - 4],'big', signed=False)
+        plte = png[plte_start : plte_start + plte_lenght]
+
+        trns_start = self.png.find(PNG.TRNS) # we need to move 4 bytes from the identifier
+        if trns_start == -1:
+            raise TypeError("Not a valid PNG image")
+        trns_start+=4
+        trns_lenght = int.from_bytes(self.png[trns_start - 8 : trns_start - 4],'big', signed=False)
+        trns = self.png[trns_start : trns_start + trns_lenght]
+
+        idat_start = self.png.find(PNG.IDAT)# we need to move 4 bytes from the identifier
+        if idat_start == -1:
+            raise TypeError("Not a valid PNG image")
+        idat_start+=4
+        idat_lenght = int.from_bytes(self.png[idat_start - 8 : idat_start - 4],'big', signed=False)
+        idat = zlib.decompress(self.png[idat_start : idat_start + idat_lenght])
+        self.merge_trns_plte(trns,plte)
+        self.idat_to_pes_px(idat)
+
+    def merge_trns_plte(self,trns,plte):
+        for x in range(len(trns)): 
+            self.pes_palette += plte[3*x:3*x+3]+trns[1*x:1*x+1] #Se intercalan los colores y transparencias (3 bytes = 1 colors, 1 byte transparencia)
+
+    def idat_to_pes_px(self,idat):
+        step = self.width
+        if step == 32:
+            step = int(step / 2)
+        for i in range(1, len(idat), step + 1):
+            self.pes_idat += idat[ i : i + step]
+
