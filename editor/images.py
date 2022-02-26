@@ -1,4 +1,3 @@
-import io
 from PIL import Image, ImageTk
 import io
 import zlib
@@ -23,7 +22,6 @@ class PNG:
         """
         Returns a PNG image from a pes image
         """
-        IHDR_DATA = bytearray(self.pes_img.dimension.to_bytes(4, byteorder='big', signed=False)) +  bytearray(self.pes_img.dimension.to_bytes(4, byteorder='big', signed=False)) + bytearray([self.pes_img.bpp, 3, 0, 0, 0])
         IHDR_DATA = (bytearray(self.pes_img.width.to_bytes(4, byteorder='big', signed=False)) 
         +  bytearray(self.pes_img.height.to_bytes(4, byteorder='big', signed=False)) 
         + bytearray([self.pes_img.bpp, 3, 0, 0, 0]))
@@ -63,8 +61,6 @@ class PNG:
         if step == 32:
             step = int(step / 2)
         idat_uncompress = bytearray()
-        for j in range(0, len(self.pes_img.pes_idat), self.pes_img.palette_size):
-            idat_uncompress += b'\x00' + self.pes_img.pes_idat[j : j + self.pes_img.palette_size]
         for j in range(0, len(self.pes_img.pes_idat), step):
             idat_uncompress += bytearray(1) + self.pes_img.pes_idat[j : j + step]
         return bytearray(zlib.compress(idat_uncompress))
