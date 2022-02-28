@@ -50,7 +50,7 @@ class LogosTab(Frame):
             return 0
         with open(png_location, "rb") as png_f:
             pes_img = PESImg(bytearray(png_f.read()))
-        if pes_img.width != 32 or pes_img.height != 32:
+        if pes_img.width != 32 or pes_img.height != 32 or pes_img.bpp!=4:
             messagebox.showerror(title = self.appname, message = "Image must be 32x32 and 16 colours indexed")
             return 0
         self.of.logos[i].update_logo(pes_img.pes_palette, pes_img.pes_idat)
