@@ -2,6 +2,7 @@ from tkinter import Button, Frame, Toplevel, filedialog, messagebox
 from editor import PESImg
 
 class LogosTab(Frame):
+    def __init__(self, master, option_file, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
