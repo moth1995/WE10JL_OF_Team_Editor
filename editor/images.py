@@ -13,6 +13,12 @@ class PNG:
     IEND = bytearray([73,69,78,68])
     iend_crc32 = bytearray(zlib.crc32(IEND).to_bytes(4, byteorder='big', signed=False))
     iend_chunk = IEND_LENGTH + IEND + iend_crc32
+    TEXT = bytearray([116,69,88,116])
+    keyword_author = 'Author'.encode('iso-8859-1')
+    text_author = 'PES 5 Indie Team & Yerry11'.encode('iso-8859-1')
+    keyword_software = 'Software'.encode('iso-8859-1')
+    text_software = 'OF Team Editor'.encode('iso-8859-1')
+    separator = bytearray(1)
 
     def __init__(self, pes_img):
         self.pes_img = pes_img
@@ -39,7 +45,17 @@ class PNG:
         idat_lenght = bytearray(len(idat_data).to_bytes(4, byteorder='big', signed=False))
         idat_crc32 = bytearray(zlib.crc32(self.IDAT + idat_data).to_bytes(4, byteorder='big', signed=False))
         idat_chunk = bytearray(idat_lenght + self.IDAT + idat_data + idat_crc32)
-        self.png = self.PNG_SIGNATURE + ihdr_chunk + plt_chunk + trns_chunk + idat_chunk + self.iend_chunk
+        author_data = bytearray(self.keyword_author + self.separator + self.text_author)
+        author_lenght = bytearray(len(author_data).to_bytes(4, byteorder='big', signed=False))
+        author_crc32 = bytearray(zlib.crc32(self.TEXT + author_data).to_bytes(4, byteorder='big', signed=False))
+        author_chunk = bytearray(author_lenght + self.TEXT + author_data + author_crc32)
+
+        software_data = bytearray(self.keyword_software + self.separator + self.text_software)
+        software_lenght = bytearray(len(software_data).to_bytes(4, byteorder='big', signed=False))
+        software_crc32 = bytearray(zlib.crc32(self.TEXT + software_data).to_bytes(4, byteorder='big', signed=False))
+        software_chunk = bytearray(software_lenght + self.TEXT + software_data + software_crc32)
+
+        self.png = self.PNG_SIGNATURE + ihdr_chunk + plt_chunk + trns_chunk + author_chunk + software_chunk + idat_chunk + self.iend_chunk
 
     def png_bytes_to_tk_img(self):
         return ImageTk.PhotoImage(Image.open(io.BytesIO(self.png)).convert("RGBA"))
@@ -62,7 +78,7 @@ class PNG:
             step = int(step / 2)
         idat_uncompress = bytearray()
         for j in range(0, len(self.pes_img.pes_idat), step):
-            idat_uncompress += bytearray(1) + self.pes_img.pes_idat[j : j + step]
+            idat_uncompress += self.separator + self.pes_img.pes_idat[j : j + step]
         return bytearray(zlib.compress(idat_uncompress))
 
 class PESImg:
