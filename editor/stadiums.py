@@ -1,6 +1,9 @@
+from . import option_file_data
+
 class Stadium:
 
     TOTAL = 64
+    START_ADDRESS = option_file_data.OF_BLOCK[2]
     MAX_LEN = 61
     SW_ADDR = START_ADDRESS + (MAX_LEN * TOTAL)
     END_ADDR = SW_ADDR + TOTAL
