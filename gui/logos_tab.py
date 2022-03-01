@@ -2,7 +2,6 @@ from tkinter import Button, Frame, Toplevel, filedialog, messagebox
 from editor import PESImg
 
 class LogosTab(Frame):
-    def __init__(self, master, option_file, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
@@ -62,6 +61,8 @@ class LogosTab(Frame):
             return 0
         with open(file.name,'wb') as img:
             img.write(img_bytes)
+        messagebox.showinfo(title = self.appname, message = f"Image exported successfully at {file.name}")
+
 
     def remove_logo(self,i):
         self.of.logos[i].delete_logo()
