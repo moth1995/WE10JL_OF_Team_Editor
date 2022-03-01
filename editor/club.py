@@ -1,9 +1,10 @@
 from .utils.common_functions import rgb_to_hex
+from . import option_file_data
 
 class Club:
-    total = 162
-    start_address = 680400
+    start_address = option_file_data.OF_BLOCK[6]
     size = 92
+    total = int(option_file_data.OF_BLOCK_SIZE[6] / size)
     max_name_size = 48
     max_abbr_name_size = 10
     stadium_offset = 85

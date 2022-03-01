@@ -1,13 +1,15 @@
 from .stat import Stat
+from . import option_file_data
 
 class Player:
-    start_address = 39608
-    start_address_edited = 16780
+    start_address = option_file_data.OF_BLOCK[4]
+    start_address_edited = option_file_data.OF_BLOCK[3]
+    size = 124
     #last_self.idx = 4872
     first_edited_id = 32768
-    total_edit = 184
+    total_edit = int(option_file_data.OF_BLOCK_SIZE[3] / size)
     first_unused = 4504
-    total_players = 4540
+    total_players = int(option_file_data.OF_BLOCK_SIZE[4] / size)
     first_shop = 4157
     first_ml_youth = 4317
     first_ml_old = 4494

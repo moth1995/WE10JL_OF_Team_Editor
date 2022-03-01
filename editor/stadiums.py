@@ -1,9 +1,8 @@
 class Stadium:
 
     TOTAL = 64
-    START_ADDRESS = 9544
     MAX_LEN = 61
-    SW_ADDR = START_ADDRESS + MAX_LEN * TOTAL
+    SW_ADDR = START_ADDRESS + (MAX_LEN * TOTAL)
     END_ADDR = SW_ADDR + TOTAL
 
     def __init__(self,option_file, idx):
