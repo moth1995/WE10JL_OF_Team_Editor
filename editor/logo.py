@@ -61,10 +61,13 @@ class Logo:
         self.option_file.data[self.logo_address : self.header_address + self.size] = self.logo
 
     def update_logo(self, palette, idat):
-        self.enable_logo()
-        self.logo = palette + idat
-        self.option_file.data[self.header_address : self.header_address + self.header_size] = self.header
-        self.option_file.data[self.logo_address : self.header_address + self.size] = self.logo
-        self.set_logo()
-        self.set_pes_palette()
-        self.set_pes_idat()
+        if len(palette) + len(idat) == len(self.logo):
+            self.enable_logo()
+            self.logo = palette + idat
+            self.option_file.data[self.header_address : self.header_address + self.header_size] = self.header
+            self.option_file.data[self.logo_address : self.header_address + self.size] = self.logo
+            self.set_logo()
+            self.set_pes_palette()
+            self.set_pes_idat()
+        else:
+            raise ValueError("Image palette and idat size is not equals to the pes logo size")
