@@ -231,7 +231,7 @@ if root.filename!="":
     my_menu.add_cascade(label="File", menu=file_menu)
     file_menu.add_command(label="Save", command=save_btn_action)
     file_menu.add_command(label="Save as", command=save_as_btn_action)
-    file_menu.add_command(label="Exit", command=root.quit)
+    file_menu.add_command(label="Exit", command=root.destroy)
     my_menu.add_cascade(label="Help", menu=help_menu)
     help_menu.add_command(label="About...", command=show_thanks)
 
