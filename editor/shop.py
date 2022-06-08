@@ -1,4 +1,4 @@
-from .utils.common_functions import zero_fill_right_shift
+from .utils import zero_fill_right_shift
 
 class Shop:
     BG_OFFSET = 5224

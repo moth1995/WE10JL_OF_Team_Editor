@@ -1,8 +1,9 @@
-from tkinter import Button, Entry, Frame, Label, messagebox, ttk
-from editor.utils.common_functions import intTryParse
+from tkinter import Button, Entry, Frame, Label, messagebox
+from tkinter.ttk import Combobox
+from editor import common_functions, OptionFile
 
 class ShopTab(Frame):
-    def __init__(self, master, option_file, w, h, appname):
+    def __init__(self, master, option_file:OptionFile, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
@@ -15,12 +16,12 @@ class ShopTab(Frame):
         # Since we don't know the name of the background menu we generate some random names
         self.bg_list = [f"Main Menu BG {i+1}" for i in range(63)]
         self.bg_selector_lbl = Label(self, text= f"Main Menu Background Selector")
-        self.bg_selector_cmb = ttk.Combobox(self, state="readonly", value=self.bg_list, width=20)
+        self.bg_selector_cmb = Combobox(self, state="readonly", value=self.bg_list, width=20)
         self.bg_selector_cmb.current(self.of.shop.bg)
         self.bg_selector_btn = Button(self,text="Set", command=lambda: messagebox.showinfo(title=self.appname,message=self.of.shop.set_background(self.bg_selector_cmb.current())))
 
     def shop_set_points(self):
-        value = intTryParse(self.new_points_box.get())
+        value = common_functions.intTryParse(self.new_points_box.get())
         if isinstance(value, int):
             try:
                 self.of.shop.set_points(value)

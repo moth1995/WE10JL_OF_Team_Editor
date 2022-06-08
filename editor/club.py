@@ -1,4 +1,4 @@
-from .utils.common_functions import rgb_to_hex
+from .utils import rgb_to_hex
 from . import option_file_data
 
 class Club:

@@ -2,7 +2,7 @@ from tkinter import Entry, Frame, Label, Listbox, colorchooser, messagebox, Butt
 from tkinter.ttk import Combobox
 from PIL import ImageTk, Image
 from editor import OptionFile
-from editor.utils.common_functions import hex_to_rgb
+from editor import common_functions
 
 class ClubTab(Frame):
     def __init__(self, master, option_file:OptionFile, w, h, appname):
@@ -63,8 +63,8 @@ class ClubTab(Frame):
             self.of.clubs[club_id].update_abbr(self.clubs_abbr_box.get())
             self.of.clubs[club_id].update_stadium(self.clubs_stad_cmb.current())
             self.of.clubs[club_id].update_flag(self.clubs_flag_cmb.current())
-            self.of.clubs[club_id].update_color1(hex_to_rgb(self.clubs_color1_btn['bg']))
-            self.of.clubs[club_id].update_color2(hex_to_rgb(self.clubs_color2_btn['bg']))
+            self.of.clubs[club_id].update_color1(common_functions.hex_to_rgb(self.clubs_color1_btn['bg']))
+            self.of.clubs[club_id].update_color2(common_functions.hex_to_rgb(self.clubs_color2_btn['bg']))
             self.of.clubs[club_id].update_supp_color(self.clubs_sup_c1_cmb.current(), self.clubs_sup_c2_cmb.current())
             self.refresh_gui()
         except TclError as e:
@@ -92,9 +92,9 @@ class ClubTab(Frame):
             for j in range(0,height):
                 data = img.getpixel((i,j))
                 if (data[0]==0 and data[1]==0 and data[2]==0):
-                    img.putpixel((i,j),tuple(hex_to_rgb(self.clubs_color1_btn['bg'])))
+                    img.putpixel((i,j),tuple(common_functions.hex_to_rgb(self.clubs_color1_btn['bg'])))
                 elif (data[0]==255 and data[1]==255 and data[2]==255):
-                    img.putpixel((i,j),tuple(hex_to_rgb(self.clubs_color2_btn['bg'])))
+                    img.putpixel((i,j),tuple(common_functions.hex_to_rgb(self.clubs_color2_btn['bg'])))
         img = ImageTk.PhotoImage(img)
         self.clubs_flag_img_lbl.configure(image=img)
         self.clubs_flag_img_lbl.image =img
