@@ -1,9 +1,8 @@
-from tkinter import Entry, Frame, Label, messagebox, Listbox
-
-from gui.club_tab import ClubTab
+from tkinter import Entry, Frame, Label, TclError, messagebox, Listbox
+from editor import OptionFile
 
 class StadiumLeagueTab(Frame):
-    def __init__(self, master, option_file, w, h, appname):
+    def __init__(self, master, option_file:OptionFile, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
@@ -11,7 +10,6 @@ class StadiumLeagueTab(Frame):
         self.stadiums_box = Entry(self, width=30)
         self.stadiums_box.bind('<Return>', lambda event: self.stadium_set_name())
         self.stadiums_list_box = Listbox(self, height = 30, width = 30, exportselection=False)
-        self.stadiums_list_box.selectedindex = 0
         self.stadiums_list_box.bind('<<ListboxSelect>>',lambda event: self.set_stadium_box())
         self.stadiums_list_box.insert('end',*[stadium.name for stadium in self.of.stadiums])
 
@@ -19,7 +17,6 @@ class StadiumLeagueTab(Frame):
         self.leagues_box = Entry(self, width=30)
         self.leagues_box.bind('<Return>', lambda event: self.league_set_name())
         self.leagues_list_box = Listbox(self, height = 30, width = 30, exportselection=False)
-        self.leagues_list_box.selectedindex = 0
         self.leagues_list_box.bind('<<ListboxSelect>>',lambda event: self.set_leagues_box())
         self.leagues_list_box.insert('end',*self.of.leagues_names)
 
@@ -35,6 +32,11 @@ class StadiumLeagueTab(Frame):
             messagebox.showinfo(title=self.appname,message="League name changed correctly")
         except ValueError as e:
             messagebox.showerror(title=self.appname,message=e)
+        except TclError as e:
+            messagebox.showerror(
+                self.appname,
+                message=f"You must select an item from the widget\nError code: {e}"
+            )
 
 
     def set_leagues_box(self):
@@ -51,6 +53,13 @@ class StadiumLeagueTab(Frame):
             messagebox.showinfo(title=self.appname,message="Stadium name changed correctly")
         except ValueError as e:
             messagebox.showerror(title=self.appname,message=e)
+        except TclError as e:
+            messagebox.showerror(
+                self.appname,
+                message=f"You must select an item from the widget\nError code: {e}"
+            )
+
+
 
     def set_stadium_box(self):
         self.stadiums_box.delete(0,'end')
