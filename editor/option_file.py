@@ -129,7 +129,7 @@ class OptionFile:
                     break
 
                 c = bytes_to_int(self.data, a)
-                p = ((c - self.of_key[k]) + 0x7ab3684c) ^ 0x7ab3684c
+                p = ((c - self.of_key[k]) + self.of_key[-1]) ^ self.of_key[-1]
 
                 self.data[a] = p & 0x000000FF
                 self.data[a + 1] = zero_fill_right_shift(p, 8) & 0x000000FF
@@ -137,7 +137,7 @@ class OptionFile:
                 self.data[a + 3] = zero_fill_right_shift(p, 24) & 0x000000FF
 
                 k += 1
-                if k == 446:
+                if k == len(self.of_key):
                     k = 0
 
                 a += 4
@@ -154,7 +154,7 @@ class OptionFile:
                     break
 
                 p = bytes_to_int(self.data, a)
-                c = self.of_key[k] + ((p ^ 0x7ab3684c) - 0x7ab3684c)
+                c = self.of_key[k] + ((p ^ self.of_key[-1]) - self.of_key[-1])
 
                 self.data[a] = c & 0x000000FF
                 self.data[a + 1] = zero_fill_right_shift(c, 8) & 0x000000FF
@@ -162,7 +162,7 @@ class OptionFile:
                 self.data[a + 3] = zero_fill_right_shift(c, 24) & 0x000000FF
 
                 k += 1
-                if k == 446:
+                if k == len(self.of_key):
                     k = 0
 
                 a += 4
@@ -194,10 +194,10 @@ class OptionFile:
         """
         Load all clubs from OF data and add to clubs list.
         """
-        self.clubs = []
-        for i in range(Club.total):
-            club = Club(self, i)
-            self.clubs.append(club)
+        self.clubs = [Club(self, i) for i in range(Club.total)]
+        #for i in range(Club.total):
+            #club = Club(self, i)
+            #self.clubs.append(club)
 
     def set_clubs_names(self):
         self.clubs_names = [club.name for club in self.clubs]
@@ -206,9 +206,10 @@ class OptionFile:
         """
         Load all logos from OF data and add to logos list.
         """
-        self.logos = []
-        self.logos_png = []
-        self.logos_tk = []
+        self.logos = [Logo(self, i) for i in range(Logo.total)]
+        self.logos_png = [PNG(logo) for logo in self.logos]
+        self.logos_tk = [png.png_bytes_to_tk_img() for png in self.logos_png]
+        """
         for i in range(Logo.total):
             logo = Logo(self, i)
             self.logos.append(logo)
@@ -216,7 +217,7 @@ class OptionFile:
             self.logos_png.append(png)
             img_tk = png.png_bytes_to_tk_img()
             self.logos_tk.append(img_tk)
-
+        """
     def set_players(self):
         """
         Load all players from OF data and add to players list.
