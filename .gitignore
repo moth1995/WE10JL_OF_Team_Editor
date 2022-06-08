@@ -121,3 +121,4 @@ COFPES_OF_Editor/
 BISLPM-66595JWEXOPT
 *.bin
 test/
+.vscode/
