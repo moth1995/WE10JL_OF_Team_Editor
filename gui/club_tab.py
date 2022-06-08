@@ -66,7 +66,7 @@ class ClubTab(Frame):
             self.of.clubs[club_id].update_color1(common_functions.hex_to_rgb(self.clubs_color1_btn['bg']))
             self.of.clubs[club_id].update_color2(common_functions.hex_to_rgb(self.clubs_color2_btn['bg']))
             self.of.clubs[club_id].update_supp_color(self.clubs_sup_c1_cmb.current(), self.clubs_sup_c2_cmb.current())
-            self.refresh_gui()
+            self.refresh_gui(club_id)
         except TclError as e:
             messagebox.showerror(
                 self.appname,
@@ -123,7 +123,7 @@ class ClubTab(Frame):
         self.clubs_sup_c1_cmb.current(self.of.clubs[club_id].supp_color_c1)
         self.clubs_sup_c2_cmb.current(self.of.clubs[club_id].supp_color_c2)
 
-    def refresh_gui(self):
+    def refresh_gui(self,item_idx=None):
         """
         Updates every gui element that use the teamlist 
         """
@@ -132,6 +132,9 @@ class ClubTab(Frame):
         self.clubs_list_box.delete(0,'end')
         self.clubs_list_box.insert('end',*self.of.clubs_names)
         self.clubs_stad_cmb['value'] = self.of.stadiums_names
+        if item_idx!=None:
+            # After we clic on the button we lost the item selection so with this we solve it
+            self.clubs_list_box.select_set(item_idx)
 
     def publish(self):
         self.clubs_list_box.place(x=5, y=20)

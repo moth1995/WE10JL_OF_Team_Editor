@@ -28,7 +28,8 @@ class StadiumLeagueTab(Frame):
             
             self.leagues_list_box.delete(0,'end')
             self.leagues_list_box.insert('end',*self.of.leagues_names)
-            
+            self.leagues_list_box.select_set(league_id)
+
             messagebox.showinfo(title=self.appname,message="League name changed correctly")
         except ValueError as e:
             messagebox.showerror(title=self.appname,message=e)
@@ -50,6 +51,7 @@ class StadiumLeagueTab(Frame):
             self.of.stadiums[stadium_id].set_name(std_new_name)
             self.stadiums_list_box.delete(0,'end')
             self.stadiums_list_box.insert('end',*self.of.stadiums_names)
+            self.stadiums_list_box.select_set(stadium_id)
             messagebox.showinfo(title=self.appname,message="Stadium name changed correctly")
         except ValueError as e:
             messagebox.showerror(title=self.appname,message=e)

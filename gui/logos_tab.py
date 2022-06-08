@@ -1,8 +1,8 @@
 from tkinter import Button, Frame, Toplevel, filedialog, messagebox
-from editor import PESImg
+from editor import PESImg, OptionFile
 
 class LogosTab(Frame):
-    def __init__(self, master, option_file, w, h, appname):
+    def __init__(self, master, option_file:OptionFile, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
