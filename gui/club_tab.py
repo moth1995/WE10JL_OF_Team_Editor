@@ -1,14 +1,15 @@
-from tkinter import Entry, Frame, Label, Listbox, colorchooser, ttk, Button
+from tkinter import Entry, Frame, Label, Listbox, colorchooser, messagebox, Button, TclError
+from tkinter.ttk import Combobox
 from PIL import ImageTk, Image
+from editor import OptionFile
 from editor.utils.common_functions import hex_to_rgb
 
 class ClubTab(Frame):
-    def __init__(self, master, option_file, w, h, appname):
+    def __init__(self, master, option_file:OptionFile, w, h, appname):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
         self.clubs_list_box = Listbox(self, height = 30, width = 30, exportselection=False)
-        self.clubs_list_box.selectedindex = 0
         self.clubs_list_box.bind('<<ListboxSelect>>',lambda event: self.set_club_data())
         self.clubs_list_box.delete(0,'end')
         self.clubs_list_box.insert('end',*self.of.clubs_names)
@@ -17,10 +18,10 @@ class ClubTab(Frame):
         self.clubs_box = Entry(self, width=30)
         self.clubs_abbr_box = Entry(self, width=15)
         self.clubs_stad_lbl = Label(self,text="Home stadium")
-        self.clubs_stad_cmb = ttk.Combobox(self, state="readonly", value=self.of.stadiums_names, width=30)
+        self.clubs_stad_cmb = Combobox(self, state="readonly", value=self.of.stadiums_names, width=30)
         self.clubs_flag_lbl = Label(self,text="Flag")
         self.clubs_flag_img_lbl = Label(self,borderwidth=2, relief="solid")
-        self.clubs_flag_cmb = ttk.Combobox(self, state="readonly", value=[f"Flag Background {i}" for i in range(12)], width=30)
+        self.clubs_flag_cmb = Combobox(self, state="readonly", value=[f"Flag Background {i}" for i in range(12)], width=30)
         self.clubs_flag_cmb.bind('<<ComboboxSelected>>', lambda event: self.update_flag_lbl())
         self.clubs_color1_btn = Button(self, height=2, width=5, command=lambda: self.update_color1_btn())
         self.clubs_color2_btn = Button(self, height=2, width=5, command=lambda: self.update_color2_btn())
@@ -32,10 +33,10 @@ class ClubTab(Frame):
             ]
         self.clubs_supp_lbl = Label(self, text="Color Supporter")
         self.clubs_sup_c1_lbl = Label(self, height=2, width=5)
-        self.clubs_sup_c1_cmb = ttk.Combobox(self, state="readonly", value=colors_list)
+        self.clubs_sup_c1_cmb = Combobox(self, state="readonly", value=colors_list)
         self.clubs_sup_c1_cmb.bind('<<ComboboxSelected>>', lambda event: self.update_color_supp("c1", self.clubs_sup_c1_cmb.current()))
         self.clubs_sup_c2_lbl = Label(self, height=2, width=5)
-        self.clubs_sup_c2_cmb = ttk.Combobox(self, state="readonly", value=colors_list)
+        self.clubs_sup_c2_cmb = Combobox(self, state="readonly", value=colors_list)
         self.clubs_sup_c2_cmb.bind('<<ComboboxSelected>>', lambda event: self.update_color_supp("c2", self.clubs_sup_c2_cmb.current()))
         self.clubs_apply_btn = Button(self, text="Apply", command=lambda: self.update_club_val())
         self.clubs_discard_btn = Button(self, text="Discard", command=lambda: self.set_club_data())
@@ -56,15 +57,21 @@ class ClubTab(Frame):
             raise ValueError
 
     def update_club_val(self):
-        club_id = self.clubs_list_box.get(0, "end").index(self.clubs_list_box.get(self.clubs_list_box.curselection()))
-        self.of.clubs[club_id].update_name(self.clubs_box.get())
-        self.of.clubs[club_id].update_abbr(self.clubs_abbr_box.get())
-        self.of.clubs[club_id].update_stadium(self.clubs_stad_cmb.current())
-        self.of.clubs[club_id].update_flag(self.clubs_flag_cmb.current())
-        self.of.clubs[club_id].update_color1(hex_to_rgb(self.clubs_color1_btn['bg']))
-        self.of.clubs[club_id].update_color2(hex_to_rgb(self.clubs_color2_btn['bg']))
-        self.of.clubs[club_id].update_supp_color(self.clubs_sup_c1_cmb.current(), self.clubs_sup_c2_cmb.current())
-        self.refresh_gui()
+        try:
+            club_id = self.clubs_list_box.get(0, "end").index(self.clubs_list_box.get(self.clubs_list_box.curselection()))
+            self.of.clubs[club_id].update_name(self.clubs_box.get())
+            self.of.clubs[club_id].update_abbr(self.clubs_abbr_box.get())
+            self.of.clubs[club_id].update_stadium(self.clubs_stad_cmb.current())
+            self.of.clubs[club_id].update_flag(self.clubs_flag_cmb.current())
+            self.of.clubs[club_id].update_color1(hex_to_rgb(self.clubs_color1_btn['bg']))
+            self.of.clubs[club_id].update_color2(hex_to_rgb(self.clubs_color2_btn['bg']))
+            self.of.clubs[club_id].update_supp_color(self.clubs_sup_c1_cmb.current(), self.clubs_sup_c2_cmb.current())
+            self.refresh_gui()
+        except TclError as e:
+            messagebox.showerror(
+                self.appname,
+                message=f"You must select an item from the widget\nError code: {e}"
+            )
 
     def update_color1_btn(self):
         my_color = colorchooser.askcolor()
