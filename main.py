@@ -275,7 +275,7 @@ if root.filename!="":
     #Extra tab
 
     stat_test_entry = Entry (extra_tab) 
-    test_print_btn=Button(extra_tab, text="Print stat test!", command=lambda: print(all_data[int(stat_test_entry.get())-1]))
+    #test_print_btn=Button(extra_tab, text="Print stat test!", command=lambda: print(all_data[int(stat_test_entry.get())-1]))
     crypt_lbl=Label(extra_tab, text="Option File cryptology", font = "bold")
     decrypt_of_btn=Button(extra_tab, text="Decrypt", command=lambda: decrypt_btn_action())
     encrypt_of_btn=Button(extra_tab, text="Encrypt", command=lambda: encrypt_btn_action())
