@@ -42,7 +42,9 @@ class OptionFile:
         self.set_clubs_names()
         self.set_logos()
         self.set_players()
+        self.set_players_names()
         self.set_edited_players()
+        self.set_edited_players_names()
         self.set_leagues()
         self.set_leagues_names()
         self.set_stadiums()
@@ -231,11 +233,13 @@ class OptionFile:
         """
         Load all edited players from OF data and add to edited players list.
         """
-        self.edited_players = [Player(self, i) for i in range(Player.first_edited_id, Player.total_edit)]
+        self.edited_players = [Player(self, i) for i in range(Player.first_edited_id, Player.first_edited_id + Player.total_edit)]
 
     def set_edited_players_names(self):
         self.edited_players_names = [edited_player.name for edited_player in self.edited_players]
 
+    def get_player_idx_by_name(self, name:str):
+        return self.players[self.players_names.index(name)].idx if name in self.players_names else self.edited_players[self.edited_players_names.index(name)].idx
 
     def set_leagues(self):
         """
