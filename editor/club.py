@@ -17,7 +17,7 @@ class Club:
     first_club_emblem = 120
     supp_color_offset = 84
 
-    def __init__(self, option_file, idx):
+    def __init__(self, option_file, idx:int):
         self.option_file = option_file
         self.idx = idx
         
@@ -95,7 +95,7 @@ class Club:
         self.supp_color_c2 = (supp_color >> 4)
 
 
-    def update_name(self, name):
+    def update_name(self, name:str):
         """
         Update club name with the supplied value.
         """
@@ -111,7 +111,7 @@ class Club:
         self.set_name()
         self.option_file.set_clubs_names()
 
-    def update_abbr(self, abbr):
+    def update_abbr(self, abbr:str):
         """
         Update club name with the supplied value.
         """
@@ -126,16 +126,16 @@ class Club:
 
         self.set_abbr()
 
-    def update_stadium(self, new_stadium):
+    def update_stadium(self, new_stadium:int):
         self.option_file.data[self.stadium_address] = new_stadium
         self.option_file.data[self.stadium_edited] = 1
         self.set_stadium()
 
-    def update_flag(self, new_flag_style):
+    def update_flag(self, new_flag_style:int):
         self.option_file.data[self.flag_address] = new_flag_style
         self.set_flag
 
-    def update_emblem(self, new_emblem):
+    def update_emblem(self, new_emblem:int):
         self.option_file.data[self.emblem_address] = new_emblem.to_bytes(4,"little")
         self.option_file.data[self.emblem_address + 4] = new_emblem.to_bytes(4,"little")
         # Flag to say that we edited this emblem
