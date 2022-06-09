@@ -15,7 +15,7 @@ def intTryParse(s):
     try:
         return int(s)
     except ValueError:
-        return "Please insert an integer value not a string"
+        raise ValueError("Please insert an integer value not a string")
 
 def hex_to_rgb(value):
     value = value.lstrip('#')
@@ -37,7 +37,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 def report_callback_exception(self, exc, val, tb):
-    messagebox.showerror("Error", message=str(val))
+    messagebox.showerror(self.appname + " Error Message", message=str(val))
 
 def find_in_combobox(event:Event, widget:Combobox, list_of_strings: list):
     """

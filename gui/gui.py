@@ -4,6 +4,7 @@ from tkinter.ttk import Notebook
 from editor import OptionFile, common_functions
 
 from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab
+from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab
 
 class Gui(Tk):
     appname="J League WE10 OF Team Editor"
@@ -45,6 +46,10 @@ class Gui(Tk):
         """
         Method to expose the gui into the form
         """
+        # Players tab placing
+        
+        self.players_tab.publish()
+
         # Clubs tab placing
 
         self.clubs_tab.publish()
@@ -64,6 +69,7 @@ class Gui(Tk):
         self.stadium_league_tab.pack(fill="both", expand=1)
         self.shop_tab.pack(fill="both", expand=1)
 
+        self.tabs_container.add(self.players_tab, text="Players")
         self.tabs_container.add(self.clubs_tab, text="Clubs")
         self.tabs_container.add(self.stadium_league_tab, text="Stadiums & Leagues")
         self.tabs_container.add(self.logos_tab, text="Logos")
@@ -114,6 +120,7 @@ class Gui(Tk):
         self.edit_menu.entryconfig("Export to CSV", state="normal")
         self.edit_menu.entryconfig("Import from CSV", state="normal")
         self.tabs_container=Notebook(self)
+        self.players_tab = PlayersTab(self.tabs_container,self.of, w, h, self.appname)
         self.clubs_tab = ClubTab(self.tabs_container,self.of, w, h, self.appname)
         self.stadium_league_tab = StadiumLeagueTab(self.tabs_container,self.of, w, h, self.appname)
         self.logos_tab = LogosTab(self.tabs_container,self.of, w, h, self.appname)
