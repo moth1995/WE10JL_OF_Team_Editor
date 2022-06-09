@@ -1,8 +1,9 @@
 from .utils.common_functions import zero_fill_right_shift
 from .nationalities import get_nation, get_nation_idx
+
 class Stat:
     start_address = 48
-    def __init__(self, option_file, player,offset, shift, mask, name, type=None):
+    def __init__(self, option_file, player,offset, shift, mask, name, type=None, min=None,max=None):
         self.option_file = option_file
         self.player = player
         self.offset = offset
@@ -10,7 +11,8 @@ class Stat:
         self.mask = mask
         self.name = name
         self.type = type
-        self.get_value()
+        self.min = min
+        self.max = max
 
     @property
     def address(self):
@@ -25,14 +27,10 @@ class Stat:
         j &= self.mask
         if self.type is not None:
             j = self.normalize(j)
-        self.__value = j
+        return j
 
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
-    def value(self, new_value):
+    def set_value(self, new_value):
+        self.value_in_range(new_value)
         if self.type is not None:
             new_value = self.denormalize(new_value)
         #i = self.player.start_address + 48 + (self.player.idx * 124) + self.offset
@@ -46,9 +44,9 @@ class Stat:
         new_value = j | new_value
         self.option_file.data[(self.address - 1)] = (new_value & 0xFF)
         self.option_file.data[self.address] = (zero_fill_right_shift(new_value,8))
-        self.get_value()
 
     def normalize(self,val):
+        
         def foot_fav_side():
             return foot_fav_side_list[val]
 
@@ -123,9 +121,14 @@ class Stat:
         myfunc = mycase[self.type]
         return myfunc()
         #raise NotImplementedError
+
+    def value_in_range(self, value):
+        if self.min == None and self.max == None: return
+        elif self.min <= value <= self.max: return True
+        else: raise ValueError("Value out of allowed range for %s!" % self.name)
     
-    #def __call__(self):
-        #return self.value
+    def __call__(self):
+        return self.get_value()
 
 
 injury_list = ["C", "B", "A",]

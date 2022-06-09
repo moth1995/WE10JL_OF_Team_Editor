@@ -47,7 +47,7 @@ class Player:
         self.freekick = Stat(self.option_file, self, 5, 1, 15, "FK Style", "{stat} + 1 if {normalize} else {stat} - 1")# + 1
         self.pkStyle = Stat(self.option_file, self, 5, 5, 7, "PK Style", "{stat} + 1 if {normalize} else {stat} - 1")# + 1
         self.dkSty = Stat(self.option_file, self, 6, 2, 3, "DK Style", "{stat} + 1 if {normalize} else {stat} - 1")# + 1
-        self.age = Stat(self.option_file, self, 65, 9, 31, "Age", "{stat} + 15 if {normalize} else {stat} - 15")# +15
+        self.age = Stat(self.option_file, self, 65, 9, 31, "Age", "{stat} + 15 if {normalize} else {stat} - 15", 15, 46)# +15
         #self.goal_c1 = Stat(self.option_file,self,85-48, 1, 127, "GOAL CELEBRATION 1")
         #self.goal_c2 = Stat(self.option_file,self,86-48, 0, 127, "GOAL CELEBRATION 2")
         # self.option_filefset for growth type is rigth, but i cant get the proper value in any elif, also this value seems to be related to salary self.option_file player
