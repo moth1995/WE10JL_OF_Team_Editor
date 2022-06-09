@@ -1,6 +1,8 @@
 import os
+from string import ascii_uppercase
 import sys
-from tkinter import messagebox
+from tkinter import messagebox, Event
+from tkinter.ttk import Combobox
 
 def bytes_to_int(ba, a):
     ia = [ba[a + i] for i in range(4)]
@@ -9,11 +11,11 @@ def bytes_to_int(ba, a):
 def zero_fill_right_shift(val, n):
     return (val % 0x100000000) >> n
 
-def intTryParse(value):
+def intTryParse(s):
     try:
-        return int(value)
+        return int(s)
     except ValueError:
-        return value
+        return "Please insert an integer value not a string"
 
 def hex_to_rgb(value):
     value = value.lstrip('#')
@@ -36,3 +38,21 @@ def resource_path(relative_path):
 
 def report_callback_exception(self, exc, val, tb):
     messagebox.showerror("Error", message=str(val))
+
+def find_in_combobox(event:Event, widget:Combobox, list_of_strings: list):
+    """
+    Simulation for tkinter combobox search when a character key is press on keyboard
+
+    Args:
+        event (Event): key press event
+        widget (Combobox): combobox to be change
+        list_of_strings (list): combobox values
+    """
+    keypress = event.char.upper()
+
+    if keypress in ascii_uppercase:
+        for index, item in enumerate(list_of_strings):
+            if item[0] == keypress:
+                widget.current(index)
+                widget.event_generate('<<ComboboxSelected>>')
+                break
