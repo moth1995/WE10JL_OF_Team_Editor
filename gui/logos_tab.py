@@ -41,6 +41,7 @@ class LogosTab(Frame):
         self.export_btn.pack()
         self.delete_btn = Button(self.window, text="Delete Logo", command=lambda : self.remove_logo(i))
         self.delete_btn.pack()
+        self.window.grab_set()
         self.window.resizable(False, False)
         self.window.mainloop()
 
