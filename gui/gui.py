@@ -3,12 +3,12 @@ from tkinter.ttk import Notebook
 
 from editor import OptionFile, common_functions
 
-from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab
 from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab
 
 class Gui(Tk):
     appname="J League WE10 OF Team Editor"
     report_callback_exception = common_functions.report_callback_exception
+    of = None
     def __init__(self):
         Tk.__init__(self)
         self.title(self.appname)
@@ -32,7 +32,7 @@ class Gui(Tk):
         self.file_menu.add_command(label="Open", command=self.open)
         self.file_menu.add_command(label="Save", state='disabled',command=self.save_btn_action)
         self.file_menu.add_command(label="Save as...", state='disabled', command=self.save_as_btn_action)
-        self.file_menu.add_command(label="Exit", command=self.quit)
+        self.file_menu.add_command(label="Exit", command= lambda : self.destroy())
 
         self.my_menu.add_cascade(label="Edit", menu=self.edit_menu)
         self.edit_menu.add_command(label="Export to CSV", state='disabled', command=None)
@@ -105,7 +105,18 @@ class Gui(Tk):
         if filename == "":
             return 0
         isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
-        self.of = OptionFile(filename,isencrypted)
+        if self.of == None:
+            self.of = OptionFile(filename,isencrypted)
+        else:
+            old_of = self.of
+            try:
+                self.of = OptionFile(filename,isencrypted)
+            except Exception as e:
+                self.of = old_of
+                messagebox.showerror(
+                    self.appname,
+                    f"Fail to open new option file, previous option file restore, code error: {e}"
+                )
         self.reload_gui_items()
 
     def reload_gui_items(self):
@@ -117,8 +128,8 @@ class Gui(Tk):
         """
         self.file_menu.entryconfig("Save", state="normal")
         self.file_menu.entryconfig("Save as...", state="normal")
-        self.edit_menu.entryconfig("Export to CSV", state="normal")
-        self.edit_menu.entryconfig("Import from CSV", state="normal")
+        #self.edit_menu.entryconfig("Export to CSV", state="normal")
+        #self.edit_menu.entryconfig("Import from CSV", state="normal")
         self.tabs_container=Notebook(self)
         self.players_tab = PlayersTab(self.tabs_container,self.of, w, h, self.appname)
         self.clubs_tab = ClubTab(self.tabs_container,self.of, w, h, self.appname)
