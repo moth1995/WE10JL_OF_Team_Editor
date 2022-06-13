@@ -124,3 +124,6 @@ nations = [
     "Turkmenistán",
     "Free Nationality",
 ]
+
+total_nations = len(nations)
+
