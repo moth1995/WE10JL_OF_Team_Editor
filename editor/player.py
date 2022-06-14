@@ -1,3 +1,4 @@
+from editor.edited_flags import EditedFlags
 from .appearance import Appearance
 from .special_abilities import SpecialAbilities
 from .abilities import Abilities, Abilities_1_8
@@ -36,6 +37,7 @@ class Player:
         self.abilities = Abilities(self)
         self.abilities_1_8 = Abilities_1_8(self)
         self.special_abilities = SpecialAbilities(self)
+        self.edited_flags = EditedFlags(self)
 
     @property
     def is_edit(self):

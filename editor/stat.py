@@ -3,8 +3,8 @@ from .nationalities import get_nation, get_nation_idx
 
 class Stat:
     start_address = 48
-    def __init__(self, option_file, player,offset, shift, mask, name, type=None, min=None,max=None):
-        self.option_file = option_file
+    def __init__(self, player,offset, shift, mask, name, type=None, min=None,max=None):
+        #self.player.of = option_file
         self.player = player
         self.offset = offset
         self.shift = shift
@@ -22,7 +22,7 @@ class Stat:
         #i = self.player.start_address + 48 + self.player.idx * 124 + self.offset
         #if self.player.idx > self.player.total_players:
             #i = self.player.start_address_edited + 48 + (self.player.idx - self.player.first_edited_id) * 124 + self.offset
-        j = (self.option_file.data[self.address]) << 8 | (self.option_file.data[(self.address - 1)])
+        j = (self.player.of.data[self.address]) << 8 | (self.player.of.data[(self.address - 1)])
         j = zero_fill_right_shift(j,self.shift)
         j &= self.mask
         if self.type is not None:
@@ -36,14 +36,14 @@ class Stat:
         #i = self.player.start_address + 48 + (self.player.idx * 124) + self.offset
         #if (self.player.idx > self.player.total_players):
             #i = self.player.start_address_edited + 48 + ((self.player.idx - self.player.first_edited_id) * 124) + self.offset
-        j = (self.option_file.data[self.address]) << 8 | (self.option_file.data[(self.address - 1)])
+        j = (self.player.of.data[self.address]) << 8 | (self.player.of.data[(self.address - 1)])
         k = 0xFFFF & (self.mask << self.shift ^ 0xFFFFFFFF)
         j &= k
         new_value &= self.mask
         new_value <<= self.shift
         new_value = j | new_value
-        self.option_file.data[(self.address - 1)] = (new_value & 0xFF)
-        self.option_file.data[self.address] = (zero_fill_right_shift(new_value,8))
+        self.player.of.data[(self.address - 1)] = (new_value & 0xFF)
+        self.player.of.data[self.address] = (zero_fill_right_shift(new_value,8))
 
     def normalize(self,val):
         
@@ -68,6 +68,9 @@ class Stat:
         def yes_no():
             return no_yes_list[val]
 
+        def registered_position():
+            return val - 1 if val > 0 else val
+
         if isinstance(self.type, str):
             return eval(self.type.format(stat=val, normalize=True))
 
@@ -79,6 +82,7 @@ class Stat:
             4 : eyes_colour_2,
             5 : face_type,
             6 : yes_no,
+            7 : registered_position,
         }
         myfunc = mycase[self.type]
         return myfunc()
@@ -106,6 +110,9 @@ class Stat:
         def yes_no():
             return no_yes_list.index(val)
 
+        def registered_position():
+            return val + 1 if val > 0 else val
+
         if isinstance(self.type, str):
             return eval(self.type.format(stat=val, normalize=False))
 
@@ -117,6 +124,7 @@ class Stat:
             4 : eyes_colour_2,
             5 : face_type,
             6 : yes_no,
+            7 : registered_position,
         }
         myfunc = mycase[self.type]
         return myfunc()
@@ -125,8 +133,8 @@ class Stat:
     def value_in_range(self, value):
         if self.min == None and self.max == None: return
         elif self.min <= value <= self.max: return True
-        else: raise ValueError("Value out of allowed range for %s!" % self.name)
-    
+        else: raise ValueError("Value out of allowed range for %s! Must be between {%d} and %d" % self.name, self.min, self.max)
+
     def __call__(self):
         return self.get_value()
 

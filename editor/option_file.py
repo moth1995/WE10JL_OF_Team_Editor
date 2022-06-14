@@ -238,8 +238,8 @@ class OptionFile:
     def set_edited_players_names(self):
         self.edited_players_names = [edited_player.name for edited_player in self.edited_players]
 
-    def get_player_idx_by_name(self, name:str):
-        return self.players[self.players_names.index(name)].idx if name in self.players_names else self.edited_players[self.edited_players_names.index(name)].idx
+    def get_player_by_name(self, name:str):
+        return self.players[self.players_names.index(name)] if name in self.players_names else self.edited_players[self.edited_players_names.index(name)]
 
     def set_leagues(self):
         """

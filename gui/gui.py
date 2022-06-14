@@ -1,13 +1,13 @@
 from tkinter import Tk, Menu, filedialog, messagebox
 from tkinter.ttk import Notebook
 
-from editor import OptionFile, common_functions
+from editor import OptionFile
 
 from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab
 
 class Gui(Tk):
     appname="J League WE10 OF Team Editor"
-    report_callback_exception = common_functions.report_callback_exception
+    #report_callback_exception = common_functions.report_callback_exception
     of = None
     def __init__(self):
         Tk.__init__(self)

@@ -20,7 +20,7 @@ class Appearance:
         self.skin_colour = Stat(player, 41, 6, 3, "Skin Colour", "{stat} + 1 if {normalize} else {stat} - 1")# + 1
         #self.head_height = Stat(player, 91-48, 3, 15, "head height") - 7
         #self.head_widxth = Stat(player, 91-48, 7, 15, "head widxth") - 7
-        self.face_idx = Stat(player, 53, 5, 511, "Face ID", "{stat} + 1 if {normalize} else {stat} - 1")# + 1
+        self.face_idx = Stat(player, 53, 5, 2047, "Face ID", "{stat} + 1 if {normalize} else {stat} - 1")# + 1
         #self.head_ov_pos = Stat(player, 124-48,5, 7, "Head overall position") - 3
         
         # Brows menu
@@ -87,7 +87,7 @@ class Appearance:
         # Hair menu
         # The variable below will get the Hairstyle idx but we have to return many other variables such a hair type, shape, front, volume, darkness and bandana
         # Millions self.option_file thanks to Pato_lucas18 for this code who save me from doom
-        self.hair =  Stat(player,45, 0, 2047, "Hair idx", 2)
+        self.hair =  Stat(player,45, 0, 2047, "Hairstyle ID", 2)
         """
         # Bald
         if 0 <= self.hair <= 3:
