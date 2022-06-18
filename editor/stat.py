@@ -1,6 +1,5 @@
 from .utils.common_functions import zero_fill_right_shift
 from .nationalities import get_nation, get_nation_idx
-
 class Stat:
     start_address = 48
     def __init__(self, player,offset, shift, mask, name, type=None, min=None,max=None):
@@ -51,7 +50,7 @@ class Stat:
             return foot_fav_side_list[val]
 
         def nation():
-            return get_nation(val)
+            return get_nation(self.player.of.nations,val)
 
         def hair():
             return val
@@ -93,7 +92,7 @@ class Stat:
             return foot_fav_side_list.index(val)
 
         def nation():
-            return get_nation_idx(val)
+            return get_nation_idx(self.player.of.nations,val)
 
         def hair():
             return val

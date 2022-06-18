@@ -1,5 +1,5 @@
 class Logo:
-    start_address = 788972
+    start_address = 0
     total = 80
     header_size = 32
     size = 608

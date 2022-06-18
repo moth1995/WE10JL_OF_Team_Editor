@@ -1,10 +1,8 @@
-from .stadiums import Stadium
-
 class League:
 
-    TOTAL = 38
+    TOTAL = 0
     BASE_NAME_LEN = 20
-    START_ADDRESS = Stadium.END_ADDR + Stadium.MAX_LEN + 1
+    START_ADDRESS = 0
     MAX_LEN = 61
     SIZE = BASE_NAME_LEN + 1 + MAX_LEN + 2;
 

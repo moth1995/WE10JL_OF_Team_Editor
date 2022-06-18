@@ -3,7 +3,7 @@ from .stat import Stat
 class Abilities:
     def __init__(self, player):
         self.attack = Stat(player, 7, 0, 127, "Attack")
-        self.defence = Stat(player, 8, 0, 127, "Defense")
+        self.defence = Stat(player, 8, 0, 127, "Defence")
         self.body_balance = Stat(player, 9, 0, 127, "Body Balance")
         self.stamina = Stat(player, 10, 0, 127, "Stamina")
         self.top_speed = Stat(player, 11, 0, 127, "Top Speed")

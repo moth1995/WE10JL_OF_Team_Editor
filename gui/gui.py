@@ -4,9 +4,11 @@ from tkinter.ttk import Notebook
 from editor import OptionFile
 
 from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab
+from .config import Config
+
 
 class Gui(Tk):
-    appname="J League WE10 OF Team Editor"
+    appname="PES/WE/J League OF Team Editor 2006-2010"
     #report_callback_exception = common_functions.report_callback_exception
     of = None
     def __init__(self):
@@ -21,6 +23,11 @@ class Gui(Tk):
         # set the dimensions of the screen 
         # and where it is placed
         self.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        try:
+            self.create_config()
+        except FileNotFoundError as e:
+            messagebox.showerror(title=self.appname, message=f"No config files found code error {e}")
+            self.destroy()
 
         self.my_menu=Menu(self.master)
         self.config(menu=self.my_menu)
@@ -37,10 +44,25 @@ class Gui(Tk):
         self.my_menu.add_cascade(label="Edit", menu=self.edit_menu)
         self.edit_menu.add_command(label="Export to CSV", state='disabled', command=None)
         self.edit_menu.add_command(label="Import from CSV", state='disabled', command=None)
+        self.edit_submenu = Menu(self.my_menu, tearoff=0)
+        # Dinamically loading game versions as sub menu
+        for i in range(len(self.my_config.games_config)):
+            self.edit_submenu.add_command(label=self.my_config.games_config[i],command= lambda i=i: self.change_config(self.my_config.filelist[i]))
+        self.edit_menu.add_cascade(label="Game Version", menu=self.edit_submenu)
 
         self.my_menu.add_cascade(label="Help", menu=self.help_menu)
         self.help_menu.add_command(label="Manual", command=self.manual)
         self.help_menu.add_command(label="About", command=self.about)
+        self.tabs_container=Notebook(self)
+
+
+    def create_config(self):
+        self.my_config = Config()
+
+    def change_config(self, file):
+        self.my_config = Config(file)
+        #self.refresh_gui()
+
 
     def publish(self):
         """
@@ -104,19 +126,26 @@ class Gui(Tk):
             filetypes=filetypes)
         if filename == "":
             return 0
-        isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
+        #isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
         if self.of == None:
-            self.of = OptionFile(filename,isencrypted)
+            self.of = OptionFile(filename,self.my_config.file)
         else:
             old_of = self.of
             try:
-                self.of = OptionFile(filename,isencrypted)
+                self.of = OptionFile(filename,self.my_config.file)
             except Exception as e:
                 self.of = old_of
                 messagebox.showerror(
                     self.appname,
                     f"Fail to open new option file, previous option file restore, code error: {e}"
                 )
+        try :
+            f = open("./test/we2007.bin","wb")
+            f.write(self.of.data)
+            f.close()
+            print("of desencriptado guardado")
+        except Exception as e:
+            print(e)
         self.reload_gui_items()
 
     def reload_gui_items(self):
@@ -130,6 +159,7 @@ class Gui(Tk):
         self.file_menu.entryconfig("Save as...", state="normal")
         #self.edit_menu.entryconfig("Export to CSV", state="normal")
         #self.edit_menu.entryconfig("Import from CSV", state="normal")
+        self.tabs_container.destroy()
         self.tabs_container=Notebook(self)
         self.players_tab = PlayersTab(self.tabs_container,self.of, w, h, self.appname)
         self.clubs_tab = ClubTab(self.tabs_container,self.of, w, h, self.appname)

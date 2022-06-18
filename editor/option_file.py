@@ -17,27 +17,67 @@ from .stadiums import Stadium
 from .shop import Shop
 from .teams import Teams
 from .images import PNG
+from .kits import Kit
 
 from .utils.common_functions import bytes_to_int, zero_fill_right_shift
 
 
 class OptionFile:
-    of_byte_length = OF_BYTE_LENGTH
-    of_block = OF_BLOCK
-    of_block_size = OF_BLOCK_SIZE
+    #of_byte_length = OF_BYTE_LENGTH
+    #of_block = OF_BLOCK
+    #of_block_size = OF_BLOCK_SIZE
     of_key = OF_KEY
 
-    def __init__(self, file_location,crypt):
+    def __init__(self, file_location, config):
         self.file_location = file_location
-        self.encrypted = crypt
+        #self.encrypted = crypt
         self.data = bytearray()
         self.file_name = ""
         self.extension = ""
         self.game_type = None
         self.header_data = bytearray()
-
+        self.config = config
+        self.encrypted = self.config['option_file_data']['ENCRYPTED']
+        self.of_byte_length = self.config['option_file_data']['OF_BYTE_LENGTH']
+        self.of_block = self.config['option_file_data']['OF_BLOCK']
+        self.of_block_size = self.config['option_file_data']['OF_BLOCK_SIZE']
+        self.nations = self.config['NATIONS']
         self.read_option_file()
-
+        Player.start_address = self.config['option_file_data']['OF_BLOCK'][4]
+        Player.start_address_edited = self.config['option_file_data']['OF_BLOCK'][3]
+        Player.total_edit = int(self.config['option_file_data']['OF_BLOCK_SIZE'][3] / Player.size)
+        Player.first_unused = self.config['Player']['First Unused']
+        Player.total_players = int(self.config['option_file_data']['OF_BLOCK_SIZE'][4] / Player.size)
+        Player.first_shop = self.config['Player']['First Shop']
+        Player.first_ml_youth = self.config['Player']['First ML Youth']
+        Player.first_ml_old = self.config['Player']['First ML Old']
+        Club.start_address = self.config['option_file_data']['OF_BLOCK'][6]
+        Club.size = self.config['Club']['Size']
+        Club.total = int(self.config['option_file_data']['OF_BLOCK_SIZE'][6] / Club.size)
+        Club.max_abbr_name_size = self.config['Club']['Max Abbr Name Size']
+        Club.first_emblem = self.config['Club']['First Emblem']
+        Club.first_club_emblem = self.config['Club']['First Club Emblem']
+        Club.stadium_offset = Club.size - 7
+        Club.color1_offset = Club.size - 16
+        Club.emblem_offset = Club.size - 28
+        Club.flag_style_offset = Club.size - 18
+        Club.supp_color_offset = Club.size - 8
+        Club.j_league_extra_teams = self.config['Club']['J League Extra Teams']
+        Stadium.TOTAL = self.config['Stadiums']['Total']
+        Stadium.MAX_LEN = self.config['Stadiums']['Max Lenght']
+        Stadium.START_ADDRESS = self.config['option_file_data']['OF_BLOCK'][2]
+        Stadium.SW_ADDR = Stadium.START_ADDRESS + (Stadium.MAX_LEN * Stadium.TOTAL)
+        Stadium.END_ADDR = Stadium.SW_ADDR + Stadium.TOTAL
+        League.TOTAL = self.config['Leagues']['Total']
+        League.START_ADDRESS = Stadium.END_ADDR + Stadium.MAX_LEN + 1
+        Kit.start_address = self.config['option_file_data']['OF_BLOCK'][7]
+        Kit.size_nation = self.config['Kits']['Nation Kit Data Size']
+        Kit.size_club = self.config['Kits']['Club Kit Data Size']
+        Kit.total = Club.total - Club.j_league_extra_teams
+        Kit.start_address_club = Kit.start_address + (Kit.total - Club.total - Club.j_league_extra_teams) * Kit.size_nation
+        Kit.end_address = Kit.start_address_club + Kit.total * Kit.size_club
+        Logo.start_address = Kit.end_address
+        print(Logo.start_address)
         self.set_clubs()
         self.set_clubs_names()
         self.set_logos()
@@ -116,7 +156,6 @@ class OptionFile:
         of_file.close()
 
         self.decrypt()
-
         return True
 
     def decrypt(self):
@@ -224,7 +263,7 @@ class OptionFile:
         """
         Load all players from OF data and add to players list.
         """
-        self.players = [Player(self, i) for i in range(Player.total_players)]
+        self.players = [Player(self, i) for i in range(int(self.of_block_size[4] / 124))]
 
     def set_players_names(self):
         self.players_names = [player.name for player in self.players]

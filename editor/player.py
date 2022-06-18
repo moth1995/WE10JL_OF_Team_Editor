@@ -5,11 +5,10 @@ from .abilities import Abilities, Abilities_1_8
 from .positions import Position
 from .basic_settings import BasicSettings
 from .stat import Stat
-from . import option_file_data
 
 class Player:
-    start_address = option_file_data.OF_BLOCK[4]
-    start_address_edited = option_file_data.OF_BLOCK[3]
+    start_address = 0
+    start_address_edited = 0
     size = 124
     name_encoding = "utf-16-le"
     shirt_encoding = "utf-8"
@@ -17,12 +16,12 @@ class Player:
     name_bytes_length = 32
     shirt_name_bytes_length = 16
     first_edited_id = 32768
-    total_edit = int(option_file_data.OF_BLOCK_SIZE[3] / size)
-    first_unused = 4504
-    total_players = int(option_file_data.OF_BLOCK_SIZE[4] / size)
-    first_shop = 4157
-    first_ml_youth = 4317
-    first_ml_old = 4494
+    total_edit = 0
+    first_unused = 0
+    total_players = 0
+    first_shop = 0
+    first_ml_youth = 0
+    first_ml_old = 0
 
     def __init__(self,option_file, idx):
         self.idx = idx

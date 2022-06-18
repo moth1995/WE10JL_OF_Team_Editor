@@ -1,21 +1,21 @@
 from .utils import rgb_to_hex
-from . import option_file_data
 
 class Club:
-    start_address = option_file_data.OF_BLOCK[6]
-    size = 92
-    total = int(option_file_data.OF_BLOCK_SIZE[6] / size)
+    start_address = 0
+    size = 0
+    total = 0
+    j_league_extra_teams = 0
     max_name_size = 48
-    max_abbr_name_size = 10
-    stadium_offset = 85
-    flag_style_offset = 74
-    color1_offset = 76
-    emblem_offset = 64
-    first_emblem = 356
+    max_abbr_name_size = 0
+    stadium_offset = 0
+    flag_style_offset = 0
+    color1_offset = 0
+    emblem_offset = 0
+    first_emblem = 0
     # open with GGS the flg file which contains all the flags, go the first club emblem 
     # to define the value that goes into this variable will be club emblem -1 or quantity of nations + the difference
-    first_club_emblem = 120
-    supp_color_offset = 84
+    first_club_emblem = 0
+    supp_color_offset = max_name_size + max_abbr_name_size + 26
 
     def __init__(self, option_file, idx:int):
         self.option_file = option_file

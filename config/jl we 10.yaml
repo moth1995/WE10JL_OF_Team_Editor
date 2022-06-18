@@ -1,0 +1,172 @@
+option_file_data:
+    ENCRYPTED : True    
+    OF_BYTE_LENGTH : 1116160
+    OF_BLOCK : [
+        12,
+        5144,
+        9544,
+        16780,
+        39608,
+        603408,
+        680400,
+        699548,
+        837624,
+        1097000,
+    ]
+    OF_BLOCK_SIZE : [
+        4868,
+        1268,
+        7222,
+        22816,
+        562960,
+        76977,
+        19136,
+        138064,
+        259364,
+        19144,
+    ]
+
+Player:
+    First Shop : 4157
+    First ML Youth : 4317
+    First ML Old : 4494
+    First Unused : 4504
+
+Club:
+    Size : 92
+    Max Abbr Name Size : 10
+    First Emblem : 356
+    First Club Emblem : 120
+    J League Extra Teams : 46 # Only for J League games, for PES or WE set it to zero
+
+Stadiums:
+    Total : 64
+    Max Lenght : 61
+
+Leagues:
+    Total : 38
+
+Kits:
+    Nation Kit Data Size : 0
+    Club Kit Data Size : 552
+
+NATIONS : [
+    "Japan",
+    "England",
+    "France",
+    "Italy",
+    "Netherlands",
+    "Spain",
+    "Ukraine",
+    "Greece",
+    "Sweden",
+    "Scotland",
+    "Czech Republic",
+    "Denmark",
+    "Germany",
+    "Turkey",
+    "Norway",
+    "Belgium",
+    "Portugal",
+    "Argentina",
+    "Brazil",
+    "South Korea",
+    "China",
+    "Indonesia",
+    "Thailand",
+    "Vietnam",
+    "Iran",
+    "Iraq",
+    "Kuwait",
+    "Qatar",
+    "Saudi Arabia",
+    "Syria",
+    "Arab Emirates",
+    "Uzbekistan",
+    "Costa Rica",
+    "Mexico",
+    "USA",
+    "New Zealand",
+    "Papua New Guinea",
+    "Australia",
+    "Nigeria",
+    "South Africa",
+    "Algeria",
+    "Albanian",
+    "Armenia",
+    "Austria",
+    "Belarus",
+    "Bosnia and Herzegovina",
+    "Bulgaria",
+    "Croatia",
+    "Cyprus",
+    "Estonia",
+    "Finland",
+    "Georgia",
+    "Hungary",
+    "Iceland",
+    "Ireland",
+    "Israel",
+    "Latvia",
+    "liechtenstein",
+    "Lithuania",
+    "North Macedonia",
+    "North Ireland",
+    "Poland",
+    "Romania",
+    "Russia",
+    "Serbian",
+    "Slovakia",
+    "Slovenia",
+    "Switzerland",
+    "Welsh",
+    "Angolan",
+    "Benin",
+    "Burkina-Faso",
+    "Cameroon",
+    "Cape Verde",
+    "Congo",
+    "Ivory Coast",
+    "DR Congo",
+    "Egypt",
+    "Equatorial Guinea",
+    "Gabon",
+    "Gambia",
+    "Ghana",
+    "Guinea",
+    "Guinea-Bissau",
+    "Kenya",
+    "Liberia",
+    "Libya",
+    "Mali",
+    "Morocco",
+    "Mozambique",
+    "Senegal",
+    "Sierra Leone",
+    "Togo",
+    "Tunisia",
+    "Zimbabwe",
+    "Canada",
+    "Grenada",
+    "Guadeloupe",
+    "Honduras",
+    "Jamaica",
+    "Martinique",
+    "Netherlands Antilles",
+    "Panama",
+    "Trinidad and Tobago",
+    "Bolivia",
+    "Chile",
+    "Colombia",
+    "Ecuador",
+    "Paraguay",
+    "Peru",
+    "Uruguay",
+    "Venezuela",
+    "Bahrain",
+    "Malaysia",
+    "North Korea",
+    "Oman",
+    "Turkmenistan",
+    "Free Nationality",
+]
