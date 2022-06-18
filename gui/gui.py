@@ -40,6 +40,7 @@ class Gui(Tk):
         self.file_menu.add_command(label="Open", command=self.open)
         self.file_menu.add_command(label="Save", state='disabled',command=self.save_btn_action)
         self.file_menu.add_command(label="Save as...", state='disabled', command=self.save_as_btn_action)
+        self.file_menu.add_command(label="Save as OF decrypted", state='disabled',command=self.save_of_decrypted_btn_action)
         self.file_menu.add_command(label="Exit", command= lambda : self.destroy())
 
         self.my_menu.add_cascade(label="Edit", menu=self.edit_menu)
@@ -70,6 +71,7 @@ class Gui(Tk):
         self.of = None
         self.file_menu.entryconfig("Save", state="disabled")
         self.file_menu.entryconfig("Save as...", state="disabled")
+        self.file_menu.entryconfig("Save as OF decrypted", state="disabled")
         #self.edit_menu.entryconfig("Export to CSV", state="disabled")
         #self.edit_menu.entryconfig("Import from CSV", state="disabled")
         self.tabs_container=Notebook(self)
@@ -172,6 +174,7 @@ class Gui(Tk):
         """
         self.file_menu.entryconfig("Save", state="normal")
         self.file_menu.entryconfig("Save as...", state="normal")
+        self.file_menu.entryconfig("Save as OF decrypted", state="normal")
         #self.edit_menu.entryconfig("Export to CSV", state="normal")
         #self.edit_menu.entryconfig("Import from CSV", state="normal")
         self.tabs_container.destroy()
@@ -195,14 +198,25 @@ class Gui(Tk):
 
     def save_as_btn_action(self):
         try:
-            new_location = filedialog.asksaveasfile(initialdir=".",title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f".{self.object.file_extension}")
+            new_location = filedialog.asksaveasfile(initialdir=".",title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
             if new_location is None:
                 return 0
-            self.of.save_option_file(new_location)
+            self.of.save_option_file(new_location.name)
             messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
         except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
             messagebox.showerror(title=self.appname,message=f"Error while saving, error type={e}, try running as admin or saving into another location")
 
+    def save_of_decrypted_btn_action(self):
+        try:
+            new_location = filedialog.asksaveasfile(initialdir=".",title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
+            if new_location is None:
+                return 0
+            self.of.encrypted = False
+            self.of.save_option_file(new_location.name)
+            self.of.encrypted = self.my_config.file['option_file_data']['ENCRYPTED']
+            messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
+        except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
+            messagebox.showerror(title=self.appname,message=f"Error while saving, error type={e}, try running as admin or saving into another location")
 
     def about(self):
         messagebox.showinfo(title=self.appname,message=

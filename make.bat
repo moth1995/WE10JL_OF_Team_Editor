@@ -16,11 +16,3 @@ Rem end of extra command
 cd dist
 tar -acf "%PROJECT_NAME%_%VERSION%_release.zip" *
 pause
-
-
-
-
-
-rem @echo on
-rem pyinstaller --onefile "main.py" --name "J League WE 10 OF Team Editor" --noconsole --add-data=img;img --version-file file_version_info.txt
-rem pause
