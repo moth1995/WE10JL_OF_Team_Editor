@@ -85,7 +85,7 @@ class ClubTab(Frame):
 
     def update_flag_lbl(self):
         flag_id = str(self.clubs_flag_cmb.current())
-        img = (Image.open(common_functions.resource_path("img/backflag" + flag_id + ".png")).convert('RGB'))
+        img = (Image.open(common_functions.resource_path("resources/img/backflag" + flag_id + ".png")).convert('RGB'))
         width = img.size[0]
         height = img.size[1]
         for i in range(0,width):# process all pixels
