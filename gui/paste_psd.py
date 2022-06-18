@@ -32,7 +32,7 @@ def paste_psd(player_stats_window, clipboard, nations):
     ]
 
     gui_special_ability_names = [
-        "Dribbling", "Tactical Dribble", "Positioning", "Reaction", "Playmaking", "Passing", "Scoring", "1-1 Scoring", "Post player", "Lines", "Middle shooting", "Side", "Centre", "Penalties", "1-Touch pass", "Outside", "Marking", "Sliding Tackle", "Covering", "D-Line control", "Penalty stopper", "1-on-1 Stopper", "Long throw",
+        "Dribbling", "Tactical Dribble", "Positioning", "Reaction", "Playmaking", "Passing", "Scoring", "1-1 Scoring", "Post Player", "Lines", "Middle Shooting", "Side", "Centre", "Penalties", "1-Touch Pass", "Outside", "Marking", "Sliding Tackle", "Covering", "D-Line Control", "Penalty Stopper", "1-on-1 Stopper", "Long throw",
     ]
 
     gui_position_names = [
@@ -209,4 +209,4 @@ def paste_psd(player_stats_window, clipboard, nations):
                         break
             #print("")
         except Exception as e:
-            messagebox.showerror(tittle = "PSD PASTE ERROR", message = e)
+            messagebox.showerror(title = "PSD PASTE ERROR", message = e)
