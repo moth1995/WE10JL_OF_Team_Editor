@@ -82,7 +82,7 @@ class Player:
         ):
             all_name_bytes = self.of.data[self.address : self.address + self.name_bytes_length]
             try:
-                name = all_name_bytes.decode('utf-16-le').encode('utf-8').partition(b"\0")[0].decode('utf-8')
+                name = all_name_bytes.decode(encoding=self.name_encoding,errors="replace").encode(encoding=self.shirt_encoding, errors="replace").partition(b"\0")[0].decode(encoding=self.shirt_encoding, errors="replace")
             except:
                 name = f"Error (ID: {self.idx})"
 
@@ -123,7 +123,7 @@ class Player:
             player_name_bytes=[0] * self.name_bytes_length
         else:
             player_name_bytes = [0] * self.name_bytes_length
-            new_name_bytes = str.encode(new_name, "utf-16-le")
+            new_name_bytes = str.encode(new_name, self.name_encoding, errors="replace")
             player_name_bytes[: len(new_name_bytes)] = new_name_bytes
 
         for i, byte in enumerate(player_name_bytes):
@@ -141,7 +141,7 @@ class Player:
             + self.shirt_name_bytes_length
         ]
 
-        self.__shirt_name = name_byte_array.partition(b"\0")[0].decode()
+        self.__shirt_name = name_byte_array.partition(b"\0")[0].decode(encoding=self.shirt_encoding, errors="replace")
 
     @property
     def shirt_name(self):
@@ -156,7 +156,7 @@ class Player:
         new_name = shirt_name[: self.max_name_size].upper()
 
         player_shirt_name_bytes = [0] * self.shirt_name_bytes_length
-        new_name_bytes = str.encode(new_name)
+        new_name_bytes = str.encode(new_name, encoding=self.shirt_encoding, errors="replace")
         player_shirt_name_bytes[: len(new_name_bytes)] = new_name_bytes
 
         for i, byte in enumerate(player_shirt_name_bytes):

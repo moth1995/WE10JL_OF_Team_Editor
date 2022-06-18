@@ -2,6 +2,7 @@ from tkinter import Tk, Menu, filedialog, messagebox
 from tkinter.ttk import Notebook
 
 from editor import OptionFile
+from editor import common_functions
 
 from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab
 from .config import Config
@@ -9,7 +10,7 @@ from .config import Config
 
 class Gui(Tk):
     appname="PES/WE/J League OF Team Editor 2006-2010"
-    #report_callback_exception = common_functions.report_callback_exception
+    report_callback_exception = common_functions.report_callback_exception
     of = None
     def __init__(self):
         Tk.__init__(self)
@@ -53,6 +54,8 @@ class Gui(Tk):
         self.my_menu.add_cascade(label="Help", menu=self.help_menu)
         self.help_menu.add_command(label="Manual", command=self.manual)
         self.help_menu.add_command(label="About", command=self.about)
+        game_ver = self.my_config.file["Gui"]["Game Name"]
+        self.title(f"{self.appname} Version: {game_ver}")
         self.tabs_container=Notebook(self)
 
 
@@ -61,6 +64,16 @@ class Gui(Tk):
 
     def change_config(self, file):
         self.my_config = Config(file)
+        game_ver = self.my_config.file["Gui"]["Game Name"]
+        self.title(f"{self.appname} Version: {game_ver}")
+        self.tabs_container.destroy()
+        self.of = None
+        self.file_menu.entryconfig("Save", state="disabled")
+        self.file_menu.entryconfig("Save as...", state="disabled")
+        #self.edit_menu.entryconfig("Export to CSV", state="disabled")
+        #self.edit_menu.entryconfig("Import from CSV", state="disabled")
+        self.tabs_container=Notebook(self)
+
         #self.refresh_gui()
 
 
@@ -116,7 +129,7 @@ class Gui(Tk):
             Bolean: Returns False if the user hits the "cancel" button, otherwise does their actions
         """
         filetypes = [
-            ("JL WE10 PS2 Option File", ".psu .xps"),
+            ("PES/WE/JL PS2 Option File", ".psu .xps"),
             ('All files', '*.*'),
         ]
 
@@ -139,6 +152,7 @@ class Gui(Tk):
                     self.appname,
                     f"Fail to open new option file, previous option file restore, code error: {e}"
                 )
+        """
         try :
             f = open("./test/we2007.bin","wb")
             f.write(self.of.data)
@@ -146,6 +160,7 @@ class Gui(Tk):
             print("of desencriptado guardado")
         except Exception as e:
             print(e)
+        """
         self.reload_gui_items()
 
     def reload_gui_items(self):

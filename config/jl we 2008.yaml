@@ -1,51 +1,51 @@
 Gui:
-    Game Name: "J League Winning Eleven 2007 Club Championship"
+    Game Name: "J League Winning Eleven 2008 Club Championship"
 
 option_file_data:
-    Game Identifier : "BISLPM-66810JW11OPT"
+    Game Identifier : "BISLPM-55033JW12OPT"
     ENCRYPTED : True    
-    OF_BYTE_LENGTH : 1002496
+    OF_BYTE_LENGTH : 1021952
     OF_BLOCK : [
         12,
         5144,
         9544,
-        16740,
-        39568,
-        592332,
-        669788,
-        689028,
-        827656,
-        983292,
+        17272,
+        40100,
+        611340,
+        688260,
+        708144,
+        846220,
+        1001856,
     ]
     OF_BLOCK_SIZE : [
         4868,
         1268,
-        7182,
+        7716,
         22816,
-        551924,
-        77443,
-        19228,
-        138616,
+        570400,
+        76908,
+        19872,
+        138064,
         155624,
-        18784,
+        19364,
     ]
 
 Player:
-    First Shop : 4100
-    First ML Youth : 4260
-    First ML Old : 4437
-    First Unused : 4447
+    First Shop : 4599
+    First ML Youth : 4599
+    First ML Old : 4599
+    First Unused : 4599
 
 Club:
     Size : 92
     Max Abbr Name Size : 10
     First Emblem : 356
     First Club Emblem : 120
-    J League Extra Teams : 46 # Only for J League games, for PES or WE set it to zero
+    J League Extra Teams : 54 # Only for J League games, for PES or WE set it to zero
 
 Stadiums:
-    Total : 62
-    Max Lenght : 61
+    Total : 59
+    Max Lenght : 73
 
 Leagues:
     Total : 39
@@ -66,33 +66,33 @@ NATIONS : [
     "Italy",
     "Netherlands",
     "Spain",
-    "Austria",
     "Belgium",
-    "Czech",
-    "Germany",
+    "Croatia",
     "Greece",
     "Portugal",
+    "Russia",
     "Scotland",
+    "Serbia",
+    "Switzerland",
     "Turkey",
     "Ukraine",
-    "Mexico",
     "Argentina",
     "Brazil",
-    "Kuwait",
-    "UAE",
-    "Qatar",
-    "Iraq",
-    "Uzbekistan",
-    "Saudi Arabia",
-    "Iran",
-    "Syria",
-    "Australia",
     "China",
-    "Indonesia",
-    "Thailand",
     "Korea",
+    "Australia",
+    "Thailand",
     "Vietnam",
+    "Iran",
+    "Uzbekistan",
+    "Iraq",
+    "Kuwait",
+    "Qatar",
+    "Saudi Arabia",
+    "Syria",
+    "UAE",
     "Costa Rica",
+    "Mexico",
     "United States",
     "New Zealand",
     "Papua New Guinea",
@@ -100,18 +100,21 @@ NATIONS : [
     "South Africa",
     "Algeria",
     "Albania",
+    "Andorra",
     "Armenia",
+    "Austria",
     "Azerbaijan",
     "Belarus",
     "Bosnia-Herzegovina",
     "Bulgaria",
-    "Croatia",
     "Cyprus",
+    "Czech",
     "Denmark",
     "Estonia",
     "Faroe Islands",
     "Finland",
     "Georgia",
+    "Germany",
     "Hungary",
     "Iceland",
     "Ireland",
@@ -120,28 +123,28 @@ NATIONS : [
     "Latvia",
     "Liechtenstein",
     "Lithuania",
+    "Luxembourg",
     "Macedonia",
+    "Malta",
     "Moldova",
     "Montenegro",
     "Northern Ireland",
     "Norway",
     "Poland",
     "Romania",
-    "Russia",
     "San Marino",
-    "Serbia",
     "Slovakia",
     "Slovenia",
     "Sweden",
-    "Switzerland",
-    "Yugoslavia",
     "Wales",
+    "Yugoslavia",
     "Angola",
     "Benin",
     "Burkina Faso",
     "Burundi",
     "Cameroon",
     "Cape Verde",
+    "Chad",
     "Republic of the Congo",
     "Cote d'Ivoire",
     "Democratic Republic of the Congo",
@@ -183,7 +186,10 @@ NATIONS : [
     "Uruguay",
     "Venezuela",
     "Bahrain",
+    "Indonesia",
+    "Malaysia",
     "north korea",
     "Oman",
+    "Solomon Islands",
     "Free Nationality",
 ]

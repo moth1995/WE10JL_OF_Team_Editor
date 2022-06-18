@@ -1,4 +1,8 @@
+Gui:
+    Game Name: "J League Winning Eleven 10 Europe League '06-'07"
+
 option_file_data:
+    Game Identifier : "BISLPM-66595JWEXOPT"
     ENCRYPTED : True    
     OF_BYTE_LENGTH : 1116160
     OF_BLOCK : [
@@ -50,6 +54,11 @@ Kits:
     Nation Kit Data Size : 0
     Club Kit Data Size : 552
 
+Shop:
+    Points Offset : 5212
+    Has Background Selector : True
+    Total Backgrounds : 63
+
 NATIONS : [
     "Japan",
     "England",
@@ -85,7 +94,7 @@ NATIONS : [
     "Uzbekistan",
     "Costa Rica",
     "Mexico",
-    "USA",
+    "United States",
     "New Zealand",
     "Papua New Guinea",
     "Australia",

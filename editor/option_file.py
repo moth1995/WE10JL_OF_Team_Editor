@@ -77,7 +77,9 @@ class OptionFile:
         Kit.start_address_club = Kit.start_address + (Kit.total - Club.total - Club.j_league_extra_teams) * Kit.size_nation
         Kit.end_address = Kit.start_address_club + Kit.total * Kit.size_club
         Logo.start_address = Kit.end_address
-        print(Logo.start_address)
+        Shop.HAS_BG = self.config['Shop']['Has Background Selector']
+        Shop.TOTAL_BGS = self.config['Shop']['Total Backgrounds']
+        Shop.POINTS_OFFSET_2 = self.config['Shop']['Points Offset']
         self.set_clubs()
         self.set_clubs_names()
         self.set_logos()
@@ -118,10 +120,16 @@ class OptionFile:
 
         if self.extension == ".psu":
             self.header_data, self.data = file_contents[:file_size - self.of_byte_length], file_contents[file_size - self.of_byte_length:]
+            game_identifier = self.header_data[64:64+19].decode('utf-8')
+
         elif self.extension == ".xps":
             self.header_data, self.data = file_contents[:file_size - self.of_byte_length -4], file_contents[file_size - self.of_byte_length-4:-4]
+            game_identifier = self.header_data[21:21+19].decode('utf-8')
         else:
             self.data = file_contents
+            game_identifier = file_name
+        if game_identifier != self.config['option_file_data']['Game Identifier']:
+            raise ValueError("Invalid option file version")
         if self.encrypted:
             self.decrypt()
 

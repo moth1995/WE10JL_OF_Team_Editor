@@ -2,8 +2,10 @@ from .utils import zero_fill_right_shift
 
 class Shop:
     BG_OFFSET = 5224
+    HAS_BG = False
+    TOTAL_BGS = 0
     POINTS_OFFSET_1 = 52
-    POINTS_OFFSET_2 = 5212
+    POINTS_OFFSET_2 = 0
 
     def __init__(self,option_file):
         self.of = option_file

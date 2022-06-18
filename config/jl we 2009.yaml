@@ -1,4 +1,8 @@
+Gui:
+    Game Name: "J League Winning Eleven 2009 Club Championship"
+
 option_file_data:
+    Game Identifier : "BISLPM-551822009OPT"
     ENCRYPTED : True    
     OF_BYTE_LENGTH : 1024000
     OF_BLOCK : [
@@ -37,7 +41,7 @@ Club:
     Max Abbr Name Size : 10
     First Emblem : 356
     First Club Emblem : 120
-    J League Extra Teams : 46 # Only for J League games, for PES or WE set it to zero
+    J League Extra Teams : 55 # Only for J League games, for PES or WE set it to zero
 
 Stadiums:
     Total : 55
@@ -49,6 +53,11 @@ Leagues:
 Kits:
     Nation Kit Data Size : 0
     Club Kit Data Size : 552
+
+Shop:
+    Points Offset : 5216
+    Has Background Selector : True
+    Total Backgrounds : 63
 
 NATIONS : [
     "Japan",
@@ -79,8 +88,8 @@ NATIONS : [
     "Uzbekistan",
     "Costa Rica",
     "Mexico",
-    "America",
-    "new zealand",
+    "United States",
+    "New Zealand",
     "Papua New Guinea",
     "Nigeria",
     "South Africa",
