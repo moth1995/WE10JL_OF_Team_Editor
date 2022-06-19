@@ -1,7 +1,7 @@
 from tkinter import Tk, Menu, filedialog, messagebox
 from tkinter.ttk import Notebook
 
-from editor import OptionFile
+from editor import OptionFile, Kit, Player
 from editor import common_functions
 
 from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab
@@ -46,6 +46,7 @@ class Gui(Tk):
         self.my_menu.add_cascade(label="Edit", menu=self.edit_menu)
         self.edit_menu.add_command(label="Export to CSV", state='disabled', command=None)
         self.edit_menu.add_command(label="Import from CSV", state='disabled', command=None)
+        self.edit_menu.add_command(label="Convert OF to DB (Experimental)", state='disabled', command=self.convert_of_to_db)
         self.edit_submenu = Menu(self.my_menu, tearoff=0)
         # Dinamically loading game versions as sub menu
         for i in range(len(self.my_config.games_config)):
@@ -74,6 +75,7 @@ class Gui(Tk):
         self.file_menu.entryconfig("Save as OF decrypted", state="disabled")
         #self.edit_menu.entryconfig("Export to CSV", state="disabled")
         #self.edit_menu.entryconfig("Import from CSV", state="disabled")
+        self.edit_menu.entryconfig("Convert OF to DB (Experimental)", state="disabled")
         self.tabs_container=Notebook(self)
 
         #self.refresh_gui()
@@ -177,6 +179,7 @@ class Gui(Tk):
         self.file_menu.entryconfig("Save as OF decrypted", state="normal")
         #self.edit_menu.entryconfig("Export to CSV", state="normal")
         #self.edit_menu.entryconfig("Import from CSV", state="normal")
+        self.edit_menu.entryconfig("Convert OF to DB (Experimental)", state="normal")
         self.tabs_container.destroy()
         self.tabs_container=Notebook(self)
         self.players_tab = PlayersTab(self.tabs_container,self.of, w, h, self.appname)
@@ -217,6 +220,31 @@ class Gui(Tk):
             messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
         except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
             messagebox.showerror(title=self.appname,message=f"Error while saving, error type={e}, try running as admin or saving into another location")
+
+    def convert_of_to_db(self):
+        try:
+            folder_selected = filedialog.askdirectory(initialdir=".",title=self.appname, )
+            if folder_selected == "":
+                return
+            players_file = open(folder_selected + "/db.bin_000", "wb")
+            for i in range(Player.first_unused):
+                players_file.write(self.of.data[self.of.players[i].address : self.of.players[i].address + Player.size])
+            players_file.close()
+            kits_sub_bin_counter = 0
+            kits_sub_bin_0 = open(folder_selected + f"/kits.bin_00{kits_sub_bin_counter}", "wb")
+            if Kit.size_nation > 0:
+                # this should be done in the future when there is more work done in the editor
+                kits_sub_bin_0.close()
+                return
+            else:
+                for i in range(Kit.total):
+                    kits_sub_bin_0.write(self.of.data[Kit.start_address + (i * Kit.size_club) : Kit.start_address + (i * Kit.size_club) + Kit.size_club])
+            kits_sub_bin_0.close()
+
+            messagebox.showinfo(title=self.appname,message=f"All changes saved at {folder_selected}")
+        except EnvironmentError as e: # parent of IOError, OSError *and* WindowsError where available
+            messagebox.showerror(title=self.appname,message=f"Error while saving, error type={e}, try running as admin or saving into another location")
+
 
     def about(self):
         messagebox.showinfo(title=self.appname,message=
