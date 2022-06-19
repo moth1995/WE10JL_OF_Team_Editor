@@ -1,4 +1,4 @@
-from tkinter import Entry, Frame, Label, Listbox, colorchooser, messagebox, Button, TclError
+from tkinter import Entry, Frame, Label, Listbox, StringVar, colorchooser, messagebox, Button, TclError
 from tkinter.ttk import Combobox
 from PIL import ImageTk, Image
 from editor import OptionFile
@@ -14,7 +14,10 @@ class ClubTab(Frame):
         self.clubs_list_box.delete(0,'end')
         self.clubs_list_box.insert('end',*self.of.clubs_names)
 
-        self.clubs_name_lbl = Label(self,text="Team name")
+        self.clubs_id_var = StringVar()
+        self.clubs_id_label = Label(self,text="Club ID")
+        self.clubs_id_box = Entry(self, width=3, state="readonly", textvariable=self.clubs_id_var)
+        self.clubs_name_lbl = Label(self,text="Club name")
         self.clubs_box = Entry(self, width=30)
         self.clubs_abbr_box = Entry(self, width=15)
         self.clubs_stad_lbl = Label(self,text="Home stadium")
@@ -102,6 +105,7 @@ class ClubTab(Frame):
     def set_club_data(self):
         # set the name to the entry box
         club_id = self.clubs_list_box.get(0, "end").index(self.clubs_list_box.get(self.clubs_list_box.curselection()))
+        self.clubs_id_var.set(str(club_id))
         self.clubs_box.delete(0,'end')
         self.clubs_box.insert(0,self.clubs_list_box.get(self.clubs_list_box.curselection()))
         # set the abbr name to the entry box
@@ -137,6 +141,8 @@ class ClubTab(Frame):
             self.clubs_list_box.select_set(item_idx)
 
     def publish(self):
+        self.clubs_id_label.place(x=205, y=15)
+        self.clubs_id_box.place(x=250, y=15)
         self.clubs_list_box.place(x=5, y=20)
         self.clubs_name_lbl.place(x=205, y=30)
         self.clubs_box.place(x=205, y=50)
