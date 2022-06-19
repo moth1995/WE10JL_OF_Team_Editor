@@ -1,5 +1,8 @@
+import os
 from tkinter import Tk, Menu, filedialog, messagebox
 from tkinter.ttk import Notebook
+
+import yaml
 
 from editor import OptionFile, Kit, Player
 from editor import common_functions
@@ -24,11 +27,21 @@ class Gui(Tk):
         # set the dimensions of the screen 
         # and where it is placed
         self.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        load_default = False
         try:
-            self.create_config()
-        except FileNotFoundError as e:
-            messagebox.showerror(title=self.appname, message=f"No config files found code error {e}")
-            self.destroy()
+            with open(os.getcwd() + "/OTE_Settings.yaml") as stream:
+                self.settings_file = yaml.safe_load(stream)
+                print(self.settings_file.get('Last Config File Used'))
+                self.my_config = Config(self.settings_file.get('Last Config File Used'))
+        except FileNotFoundError:
+            load_default = True
+            pass
+        if load_default:
+            try:
+                self.create_config()
+            except FileNotFoundError as e:
+                messagebox.showerror(title=self.appname, message=f"No config files found code error {e}")
+                self.destroy()
 
         self.my_menu=Menu(self.master)
         self.config(menu=self.my_menu)
@@ -41,7 +54,7 @@ class Gui(Tk):
         self.file_menu.add_command(label="Save", state='disabled',command=self.save_btn_action)
         self.file_menu.add_command(label="Save as...", state='disabled', command=self.save_as_btn_action)
         self.file_menu.add_command(label="Save as OF decrypted", state='disabled',command=self.save_of_decrypted_btn_action)
-        self.file_menu.add_command(label="Exit", command= lambda : self.destroy())
+        self.file_menu.add_command(label="Exit", command= lambda : self.stop())
 
         self.my_menu.add_cascade(label="Edit", menu=self.edit_menu)
         self.edit_menu.add_command(label="Export to CSV", state='disabled', command=None)
@@ -59,6 +72,7 @@ class Gui(Tk):
         game_ver = self.my_config.file["Gui"]["Game Name"]
         self.title(f"{self.appname} Version: {game_ver}")
         self.tabs_container=Notebook(self)
+        self.protocol('WM_DELETE_WINDOW', self.stop)
 
 
     def create_config(self):
@@ -260,9 +274,27 @@ class Gui(Tk):
         Write here some manual to your tool
         """.replace('        ', ''))
 
+    def save_settings(self):
+        settings_file_name = os.getcwd() + "/OTE_Settings.yaml"
+        
+        dict_file = {
+            'Last Config File Used' : self.my_config.file_location
+        }
+
+        settings_file = open(settings_file_name, "w")
+        yaml.dump(dict_file, settings_file)
+        settings_file.close()
+
     def start(self):
         self.resizable(False, False)
         self.mainloop()
+
+    def stop(self):
+        self.save_settings()
+        self.quit()
+        self.destroy()
+
+
 
 w = 800 # width for the Tk root
 h = 600 # height for the Tk root
