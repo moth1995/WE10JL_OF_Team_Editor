@@ -124,12 +124,12 @@ class PlayersTab(Frame):
         player = self.of.get_player_by_name(self.players_list_box.get(self.players_list_box.curselection()))
         #print(f"player id antes de la condicion: {player_id}")
         #print(player_id)
-        player_info = f"""Player id: {player.idx} 
-        
+        player_info = f"""Player id: {player.idx}
+
         Name: {player.name}
-        
-        Shirt Name: {player.shirt_name} 
-        
+
+        Shirt Name: {player.shirt_name}
+
         Nationality: {player.nation()}
 
         Age: {player.basic_settings.age()}
