@@ -1,4 +1,4 @@
-from tkinter import Entry, Frame, Label, Listbox, StringVar, colorchooser, messagebox, Button, TclError
+from tkinter import Entry, Frame, Label, Listbox, Scrollbar, StringVar, colorchooser, messagebox, Button, TclError
 from tkinter.ttk import Combobox
 from PIL import ImageTk, Image
 from editor import OptionFile
@@ -9,10 +9,13 @@ class ClubTab(Frame):
         super().__init__(master,width=w,height=h)
         self.of = option_file
         self.appname = appname
-        self.clubs_list_box = Listbox(self, height = 30, width = 30, exportselection=False)
+        self.clubs_list_box = Listbox(self, height = 31, width = 30, exportselection=False)
         self.clubs_list_box.bind('<<ListboxSelect>>',lambda event: self.set_club_data())
         self.clubs_list_box.delete(0,'end')
         self.clubs_list_box.insert('end',*self.of.clubs_names)
+        self.clubs_list_box_sb = Scrollbar(self, orient="vertical") 
+        self.clubs_list_box_sb.config(command = self.clubs_list_box.yview)
+        self.clubs_list_box.config(yscrollcommand = self.clubs_list_box_sb.set)
 
         self.clubs_id_var = StringVar()
         self.clubs_id_label = Label(self,text="Club ID")
@@ -141,23 +144,24 @@ class ClubTab(Frame):
             self.clubs_list_box.select_set(item_idx)
 
     def publish(self):
-        self.clubs_id_label.place(x=205, y=15)
-        self.clubs_id_box.place(x=250, y=15)
+        self.clubs_id_label.place(x=210, y=15)
+        self.clubs_id_box.place(x=255, y=15)
         self.clubs_list_box.place(x=5, y=20)
-        self.clubs_name_lbl.place(x=205, y=30)
-        self.clubs_box.place(x=205, y=50)
-        self.clubs_abbr_box.place(x=205, y=80)
-        self.clubs_stad_lbl.place(x=205, y=100)
-        self.clubs_stad_cmb.place(x=205, y=120)
-        self.clubs_flag_lbl.place(x=205, y=150)
-        self.clubs_flag_img_lbl.place(x=205, y=170)
-        self.clubs_flag_cmb.place(x=205, y=240)
-        self.clubs_color1_btn.place(x=205, y=270)
-        self.clubs_color2_btn.place(x=260, y=270)
-        self.clubs_supp_lbl.place(x=300, y=315)
-        self.clubs_sup_c1_lbl.place(x=260, y=340)
-        self.clubs_sup_c1_cmb.place(x=205, y=380)
-        self.clubs_sup_c2_lbl.place(x=390, y=340)
-        self.clubs_sup_c2_cmb.place(x=350, y=380)
-        self.clubs_apply_btn.place(x=240, y=420)
-        self.clubs_discard_btn.place(x=300, y=420)
+        self.clubs_list_box_sb.place(x = 190, y = 20 , height = 500)
+        self.clubs_name_lbl.place(x=210, y=30)
+        self.clubs_box.place(x=210, y=50)
+        self.clubs_abbr_box.place(x=210, y=80)
+        self.clubs_stad_lbl.place(x=210, y=100)
+        self.clubs_stad_cmb.place(x=210, y=120)
+        self.clubs_flag_lbl.place(x=210, y=150)
+        self.clubs_flag_img_lbl.place(x=210, y=170)
+        self.clubs_flag_cmb.place(x=210, y=240)
+        self.clubs_color1_btn.place(x=210, y=270)
+        self.clubs_color2_btn.place(x=265, y=270)
+        self.clubs_supp_lbl.place(x=305, y=315)
+        self.clubs_sup_c1_lbl.place(x=265, y=340)
+        self.clubs_sup_c1_cmb.place(x=210, y=380)
+        self.clubs_sup_c2_lbl.place(x=395, y=340)
+        self.clubs_sup_c2_cmb.place(x=355, y=380)
+        self.clubs_apply_btn.place(x=245, y=420)
+        self.clubs_discard_btn.place(x=305, y=420)
