@@ -3,6 +3,7 @@ from string import ascii_uppercase
 import sys
 from tkinter import messagebox, Event
 from tkinter.ttk import Combobox
+import traceback
 
 def bytes_to_int(ba, a):
     ia = [ba[a + i] for i in range(4)]
@@ -36,8 +37,12 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-def report_callback_exception(self, exc, val, tb):
-    messagebox.showerror(self.appname + " Error Message", message=str(val))
+#def report_callback_exception(self, exc, val, tb):
+#    messagebox.showerror(self.appname + " Error Message", message=str(val))
+
+def report_callback_exception(self, *args):
+    err = traceback.format_exception(*args)
+    messagebox.showerror(self.appname + " Error Message", err)
 
 def find_in_combobox(event:Event, widget:Combobox, list_of_strings: list):
     """
