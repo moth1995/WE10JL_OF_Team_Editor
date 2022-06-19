@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from tkinter import Tk, Menu, filedialog, messagebox
 from tkinter.ttk import Notebook
 
@@ -14,6 +15,7 @@ from .config import Config
 class Gui(Tk):
     appname="PES/WE/J League OF Team Editor 2006-2010"
     report_callback_exception = common_functions.report_callback_exception
+    last_working_dir = os.getcwd()
     of = None
     def __init__(self):
         Tk.__init__(self)
@@ -27,21 +29,23 @@ class Gui(Tk):
         # set the dimensions of the screen 
         # and where it is placed
         self.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        load_default = False
+        load_defaults = False
         try:
             with open(os.getcwd() + "/OTE_Settings.yaml") as stream:
                 self.settings_file = yaml.safe_load(stream)
-                print(self.settings_file.get('Last Config File Used'))
+                self.last_working_dir = self.settings_file.get('Last Working Dir')
                 self.my_config = Config(self.settings_file.get('Last Config File Used'))
-        except FileNotFoundError:
-            load_default = True
-            pass
-        if load_default:
+        except Exception as e:
+            load_defaults = True
+            messagebox.showinfo(title=self.appname, message=f"No setting file found\nLoading default options")
+        if load_defaults:
             try:
-                self.create_config()
-            except FileNotFoundError as e:
+                self.my_config = Config()
+            except Exception as e:
                 messagebox.showerror(title=self.appname, message=f"No config files found code error {e}")
+                self.quit()
                 self.destroy()
+
 
         self.my_menu=Menu(self.master)
         self.config(menu=self.my_menu)
@@ -153,10 +157,11 @@ class Gui(Tk):
 
         filename = filedialog.askopenfilename(
             title=f'{self.appname} Select your option file',
-            initialdir='.',
+            initialdir=self.last_working_dir,
             filetypes=filetypes)
         if filename == "":
             return 0
+        self.last_working_dir = str(Path(filename).parents[0])
         #isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
         if self.of == None:
             self.of = OptionFile(filename,self.my_config.file)
@@ -278,7 +283,8 @@ class Gui(Tk):
         settings_file_name = os.getcwd() + "/OTE_Settings.yaml"
         
         dict_file = {
-            'Last Config File Used' : self.my_config.file_location
+            'Last Config File Used' : self.my_config.file_location,
+            'Last Working Dir' : self.last_working_dir,
         }
 
         settings_file = open(settings_file_name, "w")
