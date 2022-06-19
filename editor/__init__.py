@@ -4,3 +4,4 @@ from .images import PESImg
 from .utils import common_functions
 from .nationalities import get_nation, get_nationality_by_demonyms, get_nation_idx
 from .player import Player
+from .kits import Kit
