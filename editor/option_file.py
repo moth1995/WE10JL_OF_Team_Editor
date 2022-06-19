@@ -124,7 +124,8 @@ class OptionFile:
 
         elif self.extension == ".xps":
             self.header_data, self.data = file_contents[:file_size - self.of_byte_length -4], file_contents[file_size - self.of_byte_length-4:-4]
-            game_identifier = self.header_data[79:79+19].decode('utf-8')
+            #game_identifier = self.header_data[79:79+19].decode('utf-8')
+            game_identifier = self.config['option_file_data']['Game Identifier'] # xps support but without gameid checking
         else:
             self.data = file_contents
             game_identifier = file_name
